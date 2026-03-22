@@ -5,21 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NyayIQ — India's AI-Powered Tax Intelligence Platform</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #0d0d0d;
-    --paper: #f5f0e8;
-    --gold: #c9a84c;
-    --gold-light: #e8d5a3;
-    --muted: #666;
+    --bg: #f0f7f4;
+    --bg2: #e6f2ed;
+    --bg3: #d4e9e0;
+    --ink: #0d2818;
+    --ink2: #1a3a28;
+    --ink3: #2d5a3d;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --green: #1a5c3a;
+    --green-dark: #0d3320;
+    --green-light: #e8f5ef;
+    --border: #b8d4c4;
+    --muted: #4a6b5a;
+    --white: #ffffff;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--ink); color: var(--paper); font-family: 'DM Sans', sans-serif; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Times New Roman', Times, serif; }
 
   /* HEADER */
   header {
-    background: var(--ink);
+    background: var(--green-dark);
     padding: 0 2rem;
     display: flex;
     align-items: center;
@@ -31,27 +40,28 @@
     z-index: 100;
   }
   .logo-text { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
-  .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 2px; }
-  nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #888; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+  .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #aaa; text-transform: uppercase; letter-spacing: 2px; }
+  nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #ccc; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
   nav a:hover, nav a.active { color: var(--gold); }
   nav a.active { border-bottom: 1px solid var(--gold); }
 
   /* HERO */
   .hero {
-    min-height: 92vh;
+    min-height: 88vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 4rem 2rem;
     position: relative;
+    background: linear-gradient(160deg, var(--green-dark) 0%, var(--green) 60%, var(--ink3) 100%);
     overflow: hidden;
   }
   .hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    background: radial-gradient(ellipse at 50% 60%, rgba(184,134,11,0.12) 0%, transparent 70%);
   }
   .hero-badge {
     display: inline-flex;
@@ -60,7 +70,7 @@
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.68rem;
     color: var(--gold);
-    border: 1px solid rgba(201,168,76,0.3);
+    border: 1px solid rgba(184,134,11,0.4);
     padding: 0.4rem 1rem;
     border-radius: 2rem;
     margin-bottom: 2rem;
@@ -76,28 +86,24 @@
     line-height: 1.1;
     margin-bottom: 1.5rem;
     max-width: 800px;
+    color: #f5f5f0;
   }
   .hero h1 em { color: var(--gold); font-style: italic; }
   .hero p {
     font-size: 1.1rem;
-    color: #aaa;
+    color: #c8ddd4;
     max-width: 560px;
     line-height: 1.7;
     margin: 0 auto 2.5rem;
   }
-  .hero-cta {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
   .btn-primary {
     background: var(--gold);
-    color: var(--ink);
+    color: var(--green-dark);
     padding: 0.85rem 2rem;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -105,8 +111,8 @@
   }
   .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
   .btn-outline {
-    border: 1px solid #444;
-    color: #aaa;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: #e0ede6;
     padding: 0.85rem 2rem;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.8rem;
@@ -123,41 +129,44 @@
     justify-content: center;
     gap: 4rem;
     padding: 3rem 2rem;
-    border-top: 1px solid #1a1a1a;
-    border-bottom: 1px solid #1a1a1a;
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
     flex-wrap: wrap;
   }
   .stat-item { text-align: center; }
-  .stat-number { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--gold); font-weight: 700; }
-  .stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+  .stat-number { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--green); font-weight: 700; }
+  .stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
 
   /* FEATURES */
   .features { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
-  .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
-  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
-  .section-title em { color: var(--gold); font-style: italic; }
+  .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--green); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 700; margin-bottom: 1rem; line-height: 1.2; color: var(--ink); }
+  .section-title em { color: var(--green); font-style: italic; }
   .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
   .feature-card {
-    background: #111;
-    border: 1px solid #1e1e1e;
+    background: var(--white);
+    border: 1.5px solid var(--border);
     padding: 2rem;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    border-top: 3px solid var(--green);
   }
-  .feature-card:hover { border-color: rgba(201,168,76,0.3); }
+  .feature-card:hover { border-color: var(--green); box-shadow: 0 4px 20px rgba(26,92,58,0.1); transform: translateY(-2px); }
   .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
-  .feature-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; }
-  .feature-desc { font-size: 0.9rem; color: #888; line-height: 1.6; }
+  .feature-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--ink); }
+  .feature-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
 
   /* COURTS */
-  .courts { padding: 4rem 2rem; background: #080808; }
+  .courts { padding: 4rem 2rem; background: var(--green-dark); }
   .courts-inner { max-width: 1100px; margin: 0 auto; }
+  .courts .section-label { color: var(--gold); }
+  .courts .section-title { color: #f0f0e8; }
   .courts-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
   .court-tag {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.7rem;
     padding: 0.5rem 1rem;
-    border: 1px solid #222;
-    color: #888;
+    border: 1px solid rgba(184,134,11,0.3);
+    color: #c8ddd4;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -165,31 +174,40 @@
   /* HOW IT WORKS */
   .how { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
   .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 3rem; }
-  .step { position: relative; }
-  .step-num { font-family: 'Playfair Display', serif; font-size: 4rem; color: rgba(201,168,76,0.15); font-weight: 900; line-height: 1; margin-bottom: 1rem; }
-  .step-title { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
-  .step-desc { font-size: 0.85rem; color: #777; line-height: 1.6; }
+  .step-num { font-family: 'Playfair Display', serif; font-size: 4rem; color: rgba(26,92,58,0.12); font-weight: 900; line-height: 1; margin-bottom: 1rem; }
+  .step-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--ink); font-family: 'Playfair Display', serif; }
+  .step-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* NEWSLETTER */
+  .newsletter-section { padding: 4rem 2rem; background: var(--bg2); border-top: 2px solid var(--border); border-bottom: 2px solid var(--border); }
+  .newsletter-inner { max-width: 600px; margin: 0 auto; text-align: center; }
+  .newsletter-inner h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--ink); margin-bottom: 0.75rem; }
+  .newsletter-inner p { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+  .newsletter-form { display: flex; gap: 0.75rem; max-width: 480px; margin: 0 auto; }
+  .newsletter-form input { flex: 1; padding: 0.75rem 1rem; border: 1.5px solid var(--border); background: var(--white); color: var(--ink); font-family: 'Times New Roman', serif; font-size: 0.9rem; outline: none; }
+  .newsletter-form input:focus { border-color: var(--green); }
+  .newsletter-form button { background: var(--green); color: white; padding: 0.75rem 1.5rem; border: none; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+  .newsletter-form button:hover { background: var(--green-dark); }
 
   /* CTA BANNER */
   .cta-banner {
-    background: linear-gradient(135deg, #111 0%, #1a1500 100%);
-    border: 1px solid rgba(201,168,76,0.2);
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+    border-top: 3px solid var(--gold);
     padding: 4rem 2rem;
     text-align: center;
-    margin: 2rem;
   }
-  .cta-banner h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem; }
-  .cta-banner p { color: #888; margin-bottom: 2rem; }
+  .cta-banner h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem; color: #f5f5f0; }
+  .cta-banner p { color: #c8ddd4; margin-bottom: 2rem; }
 
   /* FOOTER */
-  footer { background: #050505; border-top: 1px solid #1a1a1a; padding: 3rem 2rem 2rem; font-family: 'IBM Plex Mono', monospace; }
+  footer { background: var(--green-dark); border-top: 1px solid rgba(255,255,255,0.1); padding: 3rem 2rem 2rem; font-family: 'IBM Plex Mono', monospace; color: #aaa; }
   .footer-inner { max-width: 1100px; margin: 0 auto; }
   .footer-grid { display: flex; flex-wrap: wrap; gap: 3rem; justify-content: space-between; margin-bottom: 2rem; }
   .footer-col-title { font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
-  footer a { font-size: 0.72rem; color: #555; text-decoration: none; display: block; margin-bottom: 0.5rem; transition: color 0.2s; }
+  footer a { font-size: 0.72rem; color: #888; text-decoration: none; display: block; margin-bottom: 0.5rem; transition: color 0.2s; }
   footer a:hover { color: var(--gold); }
-  .footer-bottom { border-top: 1px solid #111; padding-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; }
-  .footer-bottom span { font-size: 0.65rem; color: #333; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; }
+  .footer-bottom span { font-size: 0.65rem; color: #555; }
 </style>
 </head>
 <body>
@@ -260,7 +278,7 @@
     <div class="feature-card">
       <div class="feature-icon">📡</div>
       <div class="feature-title">Daily Auto-Feed</div>
-      <div class="feature-desc">Judgements from TaxGuru, Indian Kanoon and other sources are automatically fetched and processed every day.</div>
+      <div class="feature-desc">Latest judgements from Indian Kanoon and trusted legal databases are automatically fetched and processed every morning.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📄</div>
@@ -313,7 +331,7 @@
     <div class="step">
       <div class="step-num">01</div>
       <div class="step-title">Automatic Collection</div>
-      <div class="step-desc">Every day, our automation fetches the latest tax judgements from trusted legal sources across India.</div>
+      <div class="step-desc">Every day, our automation fetches the latest tax judgements from trusted legal databases across India.</div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
@@ -333,10 +351,23 @@
   </div>
 </section>
 
+<!-- NEWSLETTER -->
+<div class="newsletter-section">
+  <div class="newsletter-inner">
+    <h2>Daily Email Digest</h2>
+    <p>Top GST & Income Tax judgements delivered to your inbox every morning. Free. No spam.</p>
+    <div class="newsletter-form">
+      <input type="email" id="nlEmail" placeholder="your@email.com" />
+      <button onclick="subscribeNL()">Subscribe Free →</button>
+    </div>
+    <div id="nlMsg" style="margin-top:0.75rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--green);display:none;">✓ Subscribed! First digest coming tomorrow morning.</div>
+  </div>
+</div>
+
 <!-- CTA -->
 <div class="cta-banner">
   <h2>Start Using NyayIQ Today</h2>
-  <p>Free access to India's most intelligent tax judgement dashboard.</p>
+  <p style="color:#c8ddd4;">Free access to India's most intelligent tax judgement dashboard.</p>
   <a href="index.html" class="btn-primary">Open Dashboard →</a>
 </div>
 
@@ -346,7 +377,7 @@
     <div class="footer-grid">
       <div>
         <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);font-weight:700;margin-bottom:0.5rem;">⚖️ NyayIQ</div>
-        <div style="font-size:0.72rem;color:#444;max-width:240px;line-height:1.7;">India's AI-powered tax judgement intelligence platform for legal professionals.</div>
+        <div style="font-size:0.72rem;color:#666;max-width:240px;line-height:1.7;">India's AI-powered tax judgement intelligence platform for legal professionals.</div>
       </div>
       <div>
         <div class="footer-col-title">Platform</div>
@@ -362,9 +393,25 @@
       </div>
       <div>
         <div class="footer-col-title">Contact</div>
-        <a href="/cdn-cgi/l/email-protection#9efdf1f0eafffdeadef0e7ffe7f7efb0f7f0"><span class="__cf_email__" data-cfemail="95f6fafbe1f4f6e1d5fbecf4ecfce4bbfcfb">[email&#160;protected]</span></a>
+        <a href="mailto:contact@nyayiq.in">contact@nyayiq.in</a>
         <a href="https://mjlexlegal.com" target="_blank">MJ Lex Legal Chambers</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 NyayIQ. All rights reserved. Built by MJ Lex Legal Chambers LLP.<
+      <span>© 2026 NyayIQ. All rights reserved. Built by MJ Lex Legal Chambers LLP.</span>
+      <span>⚠️ For informational purposes only. Not legal advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function subscribeNL() {
+  const email = document.getElementById('nlEmail').value.trim();
+  if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+  window.open('https://6b2e0123.sibforms.com/serve/MUIFAAWF8vwWqBmw3cJK5wM66W10qzFRj2fEJDyV6XEC1JbdunaatrUVCIVH4Kb3PF6M8euyL_0tn_Brq9s3U92BCtM6UN1HinGVKugMYMv8w757phdcGAS96N7OeUON2thflZeyfiVRiMC5Pb0oryyjt79hlKS7NhNFWktE8UARw5CSIDK78bDZjjXdMGar4WjD8rL2n-q-X6wNug==', '_blank');
+  document.getElementById('nlMsg').style.display = 'block';
+  document.getElementById('nlEmail').value = '';
+}
+</script>
+</body>
+</html>

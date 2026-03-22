@@ -7,14 +7,14 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#0d0d0d; --paper:#f5f0e8; --gold:#c9a84c; --gold-light:#e8d5a3; --muted:#666; }
+  :root { --ink:#0d2818; --paper:#f0f7f4; --gold:#b8860b; --gold-light:#d4a017; --muted:#666; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--ink); color:var(--paper); font-family:'DM Sans',sans-serif; }
+  body { background:#0d3320; color:var(--paper); font-family:'Times New Roman',Times,serif; }
 
-  header { background:var(--ink); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
+  header { background:#0d3320; padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
   .logo-text { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
-  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#888; text-transform:uppercase; letter-spacing:2px; }
-  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
+  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#ccc; text-transform:uppercase; letter-spacing:2px; }
+  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#ccc; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
   nav a:hover { color:var(--gold); }
   nav a.active { color:var(--gold); border-bottom:1px solid var(--gold); }
 
@@ -24,11 +24,11 @@
   .label { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:1rem; }
   .page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:900; margin-bottom:1rem; position:relative; }
   .page-header h1 em { color:var(--gold); font-style:italic; }
-  .page-header p { color:#888; max-width:500px; margin:0 auto; line-height:1.7; position:relative; }
+  .page-header p { color:#ccc; max-width:500px; margin:0 auto; line-height:1.7; position:relative; }
 
   /* BILLING TOGGLE */
   .billing-toggle { display:flex; align-items:center; justify-content:center; gap:1rem; margin:2.5rem 0; }
-  .toggle-label { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-transform:uppercase; letter-spacing:1px; }
+  .toggle-label { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#ccc; text-transform:uppercase; letter-spacing:1px; }
   .toggle-label.active { color:var(--paper); }
   .toggle-switch { width:48px; height:26px; background:#222; border-radius:13px; cursor:pointer; position:relative; transition:background 0.2s; border:1px solid #333; }
   .toggle-switch.yearly { background:rgba(201,168,76,0.3); }
@@ -41,18 +41,18 @@
   .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
   @media(max-width:768px) { .pricing-grid { grid-template-columns:1fr; } }
 
-  .plan-card { background:#111; border:1px solid #1e1e1e; padding:2.5rem; position:relative; transition:border-color 0.2s; display:flex; flex-direction:column; }
-  .plan-card:hover { border-color:#333; }
+  .plan-card { background:#f0f7f4; border:1.5px solid #b8d4c4; padding:2.5rem; position:relative; transition:border-color 0.2s; display:flex; flex-direction:column; }
+  .plan-card:hover { border-color:#0d2818; }
   .plan-card.popular { border-color:var(--gold); background:linear-gradient(180deg,#1a1500 0%,#111 40%); }
 
   .popular-badge { position:absolute; top:-1px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.6rem; font-weight:700; padding:0.3rem 1rem; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
 
   .plan-name { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:0.75rem; }
   .plan-price { font-family:'Playfair Display',serif; font-size:3rem; font-weight:900; line-height:1; margin-bottom:0.3rem; }
-  .plan-price span { font-family:'IBM Plex Mono',monospace; font-size:1rem; font-weight:400; color:#888; }
+  .plan-price span { font-family:'IBM Plex Mono',monospace; font-size:1rem; font-weight:400; color:#ccc; }
   .plan-price-yearly { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#4ade80; margin-bottom:1rem; display:none; }
   .plan-price-yearly.show { display:block; }
-  .plan-desc { font-size:0.85rem; color:#888; line-height:1.6; margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid #1e1e1e; }
+  .plan-desc { font-size:0.85rem; color:#ccc; line-height:1.6; margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid #1e1e1e; }
 
   .plan-features { flex:1; margin-bottom:2rem; }
   .feature-row { display:flex; align-items:flex-start; gap:0.75rem; padding:0.5rem 0; font-size:0.85rem; color:#ccc; border-bottom:1px solid #161616; }
@@ -61,7 +61,7 @@
   .feature-check { font-size:0.8rem; margin-top:0.1rem; min-width:16px; }
 
   .plan-btn { display:block; text-align:center; padding:0.9rem; font-family:'IBM Plex Mono',monospace; font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; text-decoration:none; cursor:pointer; border:none; transition:all 0.2s; }
-  .plan-btn.free { background:transparent; border:1px solid #333; color:#888; }
+  .plan-btn.free { background:transparent; border:1px solid #333; color:#ccc; }
   .plan-btn.free:hover { border-color:#555; color:#aaa; }
   .plan-btn.pro { background:var(--gold); color:var(--ink); }
   .plan-btn.pro:hover { background:var(--gold-light); transform:translateY(-2px); }
@@ -74,13 +74,13 @@
   .comparison h2 em { color:var(--gold); font-style:italic; }
   .comp-table { width:100%; border-collapse:collapse; }
   .comp-table th { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:1px; padding:1rem; border-bottom:2px solid #222; }
-  .comp-table th:first-child { text-align:left; color:#888; }
+  .comp-table th:first-child { text-align:left; color:#ccc; }
   .comp-table th.pro-col { color:var(--gold); }
   .comp-table td { padding:0.85rem 1rem; border-bottom:1px solid #111; font-size:0.85rem; text-align:center; }
   .comp-table td:first-child { text-align:left; color:#aaa; font-size:0.82rem; }
   .comp-table tr:hover td { background:rgba(255,255,255,0.02); }
   .comp-yes { color:#4ade80; }
-  .comp-no { color:#333; }
+  .comp-no { color:#0d2818; }
   .comp-val { color:var(--paper); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; }
 
   /* FAQ */
@@ -89,7 +89,7 @@
   .faq-item { border-bottom:1px solid #1a1a1a; }
   .faq-q { padding:1.25rem 0; font-size:0.95rem; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
   .faq-q:hover { color:var(--gold); }
-  .faq-a { font-size:0.85rem; color:#888; line-height:1.7; padding-bottom:1.25rem; display:none; }
+  .faq-a { font-size:0.85rem; color:#ccc; line-height:1.7; padding-bottom:1.25rem; display:none; }
   .faq-a.open { display:block; }
   .faq-arrow { font-size:0.7rem; color:#555; transition:transform 0.2s; }
   .faq-arrow.open { transform:rotate(180deg); }
@@ -97,14 +97,14 @@
   /* RAZORPAY MODAL */
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999; align-items:center; justify-content:center; }
   .modal-overlay.show { display:flex; }
-  .modal { background:#111; border:1px solid #333; border-top:3px solid var(--gold); padding:2.5rem; width:480px; max-width:90vw; position:relative; }
+  .modal { background:#f0f7f4; border:1px solid #333; border-top:3px solid var(--gold); padding:2.5rem; width:480px; max-width:90vw; position:relative; }
   .modal h3 { font-family:'Playfair Display',serif; font-size:1.5rem; margin-bottom:0.5rem; }
-  .modal p { color:#888; font-size:0.85rem; margin-bottom:1.5rem; line-height:1.6; }
-  .modal-close { position:absolute; top:1rem; right:1rem; background:none; border:none; color:#666; font-size:1.3rem; cursor:pointer; }
+  .modal p { color:#ccc; font-size:0.85rem; margin-bottom:1.5rem; line-height:1.6; }
+  .modal-close { position:absolute; top:1rem; right:1rem; background:none; border:none; color:#4a6b5a; font-size:1.3rem; cursor:pointer; }
   .modal-close:hover { color:var(--gold); }
   .modal-price { font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--gold); margin-bottom:1.5rem; }
-  .modal-price span { font-family:'IBM Plex Mono',monospace; font-size:0.9rem; color:#888; }
-  .modal-input { width:100%; background:#1a1a1a; border:1px solid #333; color:var(--paper); font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:0.75rem; outline:none; margin-bottom:0.75rem; transition:border-color 0.2s; }
+  .modal-price span { font-family:'IBM Plex Mono',monospace; font-size:0.9rem; color:#ccc; }
+  .modal-input { width:100%; background:#1a1a1a; border:1px solid #333; color:var(--paper); font-family:'Times New Roman',Times,serif; font-size:0.9rem; padding:0.75rem; outline:none; margin-bottom:0.75rem; transition:border-color 0.2s; }
   .modal-input:focus { border-color:var(--gold); }
   .razorpay-btn { width:100%; background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:700; padding:1rem; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; }
   .razorpay-btn:hover { background:var(--gold-light); }
@@ -113,13 +113,13 @@
   /* CTA */
   .bottom-cta { background:linear-gradient(135deg,#111,#1a1500); border:1px solid rgba(201,168,76,0.2); padding:4rem 2rem; text-align:center; margin:0 2rem 4rem; }
   .bottom-cta h2 { font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:1rem; }
-  .bottom-cta p { color:#888; margin-bottom:2rem; }
+  .bottom-cta p { color:#ccc; margin-bottom:2rem; }
   .btn-gold { background:var(--gold); color:var(--ink); padding:0.9rem 2.5rem; font-family:'IBM Plex Mono',monospace; font-size:0.78rem; font-weight:600; text-decoration:none; text-transform:uppercase; letter-spacing:1px; display:inline-block; transition:all 0.2s; border:none; cursor:pointer; }
   .btn-gold:hover { background:var(--gold-light); transform:translateY(-2px); }
 
-  footer { background:#050505; border-top:1px solid #1a1a1a; padding:2rem; font-family:'IBM Plex Mono',monospace; }
+  footer { background:#0d3320; border-top:1px solid #1a1a1a; padding:2rem; font-family:'IBM Plex Mono',monospace; }
   .footer-bottom { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem; }
-  .footer-bottom span { font-size:0.65rem; color:#333; }
+  .footer-bottom span { font-size:0.65rem; color:#0d2818; }
   footer a { color:#444; text-decoration:none; font-size:0.65rem; }
   footer a:hover { color:var(--gold); }
 </style>
@@ -227,7 +227,7 @@
   <!-- ENTERPRISE NOTE -->
   <div style="text-align:center;margin-top:2rem;padding:1.5rem;border:1px solid #1a1a1a;">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">Enterprise</div>
-    <div style="font-size:0.9rem;color:#888;margin-bottom:1rem;">Large firms, corporates, banks — custom pricing, API access, white-label. <strong style="color:var(--paper);">Starting ₹15,000/month.</strong></div>
+    <div style="font-size:0.9rem;color:#ccc;margin-bottom:1rem;">Large firms, corporates, banks — custom pricing, API access, white-label. <strong style="color:var(--paper);">Starting ₹15,000/month.</strong></div>
     <a href="contact.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Contact us for Enterprise →</a>
   </div>
 </div>
@@ -281,7 +281,7 @@
   </div>
   <div class="faq-item">
     <div class="faq-q" onclick="toggleFaq(this)">What is your refund policy? <span class="faq-arrow">▼</span></div>
-    <div class="faq-a">If you are not satisfied within the first 7 days of your subscription, contact us at contact@nyayiq.in and we will issue a full refund — no questions asked.</div>
+    <div class="faq-a">If you are not satisfied within the first 7 days of your subscription, contact us at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d0e0203190c0e192d03140c14041c430403">[email&#160;protected]</a> and we will issue a full refund — no questions asked.</div>
   </div>
 </div>
 
@@ -316,7 +316,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 let billingYearly = false;
 let selectedPlan = 'pro';
 
@@ -398,16 +398,4 @@ function initiatePayment() {
     document.body.appendChild(script);
   } else {
     const rzp = new Razorpay(options);
-    rzp.open();
-  }
-}
-
-function toggleFaq(el) {
-  const answer = el.nextElementSibling;
-  const arrow = el.querySelector('.faq-arrow');
-  answer.classList.toggle('open');
-  arrow.classList.toggle('open');
-}
-</script>
-</body>
-</html>
+    r

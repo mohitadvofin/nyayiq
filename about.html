@@ -15,11 +15,11 @@
     --muted: #666;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--ink); color: var(--paper); font-family: 'DM Sans', sans-serif; }
+  body { background: #0d3320; color: #f0f7f4; font-family: 'Times New Roman', Times, serif; }
 
   /* HEADER */
   header {
-    background: var(--ink);
+    background: #0d3320;
     padding: 0 2rem;
     display: flex;
     align-items: center;
@@ -31,8 +31,8 @@
     z-index: 100;
   }
   .logo-text { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
-  .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 2px; }
-  nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #888; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+  .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #ccc; text-transform: uppercase; letter-spacing: 2px; }
+  nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #ccc; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
   nav a:hover { color: var(--gold); }
   nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
 
@@ -66,14 +66,14 @@
   .hero h1 em { color: var(--gold); font-style: italic; }
   .hero p {
     font-size: 1rem;
-    color: #aaa;
+    color: #a8cdb8;
     line-height: 1.8;
     margin-bottom: 1rem;
   }
 
   /* PROFILE CARD */
   .profile-card {
-    background: #111;
+    background: #f0f7f4;
     border: 1px solid #222;
     border-top: 3px solid var(--gold);
     padding: 2.5rem;
@@ -116,7 +116,7 @@
     font-size: 0.62rem;
     padding: 0.3rem 0.75rem;
     border: 1px solid #2a2a2a;
-    color: #888;
+    color: #ccc;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -128,7 +128,7 @@
     font-size: 0.82rem;
   }
   .profile-stat:last-child { border-bottom: none; }
-  .profile-stat-label { color: #666; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; }
+  .profile-stat-label { color: #4a6b5a; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; }
   .profile-stat-value { color: var(--paper); font-weight: 500; }
 
   /* DIVIDER */
@@ -169,7 +169,7 @@
   @media(max-width:768px) { .story-grid { grid-template-columns: 1fr; } }
   .story p {
     font-size: 0.95rem;
-    color: #aaa;
+    color: #a8cdb8;
     line-height: 1.9;
     margin-bottom: 1.25rem;
   }
@@ -197,8 +197,8 @@
     margin-top: 3rem;
   }
   .cred-card {
-    background: #111;
-    border: 1px solid #1e1e1e;
+    background: #f0f7f4;
+    border: 1.5px solid #b8d4c4;
     padding: 1.75rem;
     transition: border-color 0.2s;
   }
@@ -210,7 +210,7 @@
     font-weight: 700;
     margin-bottom: 0.5rem;
   }
-  .cred-desc { font-size: 0.82rem; color: #777; line-height: 1.6; }
+  .cred-desc { font-size: 0.82rem; color: #4a6b5a; line-height: 1.6; }
 
   /* VENTURES */
   .ventures {
@@ -226,8 +226,8 @@
   }
   @media(max-width:768px) { .ventures-grid { grid-template-columns: 1fr; } }
   .venture-card {
-    background: #111;
-    border: 1px solid #1e1e1e;
+    background: #f0f7f4;
+    border: 1.5px solid #b8d4c4;
     padding: 2.5rem;
     position: relative;
     overflow: hidden;
@@ -249,12 +249,12 @@
   .venture-type {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.62rem;
-    color: #666;
+    color: #4a6b5a;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 1.25rem;
   }
-  .venture-desc { font-size: 0.88rem; color: #888; line-height: 1.7; margin-bottom: 1.5rem; }
+  .venture-desc { font-size: 0.88rem; color: #ccc; line-height: 1.7; margin-bottom: 1.5rem; }
   .venture-list {
     list-style: none;
     display: flex;
@@ -264,7 +264,7 @@
   .venture-list li {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.68rem;
-    color: #666;
+    color: #4a6b5a;
     padding-left: 1rem;
     position: relative;
   }
@@ -280,7 +280,7 @@
   .clients-label {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.65rem;
-    color: #444;
+    color: #2d5a3d;
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-bottom: 2rem;
@@ -301,7 +301,7 @@
     letter-spacing: 1px;
     transition: all 0.2s;
   }
-  .client-name:hover { border-color: #333; color: #888; }
+  .client-name:hover { border-color: #0d2818; color: #ccc; }
 
   /* CTA */
   .cta {
@@ -316,7 +316,7 @@
     text-align: center;
   }
   .cta h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem; }
-  .cta p { color: #888; margin-bottom: 2rem; }
+  .cta p { color: #ccc; margin-bottom: 2rem; }
   .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
   .btn-gold {
     background: var(--gold);
@@ -333,7 +333,7 @@
   .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
   .btn-outline {
     border: 1px solid #444;
-    color: #aaa;
+    color: #a8cdb8;
     padding: 0.85rem 2rem;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.78rem;
@@ -359,8 +359,8 @@
     justify-content: space-between;
     gap: 0.5rem;
   }
-  .footer-bottom span { font-size: 0.65rem; color: #333; }
-  footer a { font-size: 0.65rem; color: #444; text-decoration: none; }
+  .footer-bottom span { font-size: 0.65rem; color: #0d2818; }
+  footer a { font-size: 0.65rem; color: #2d5a3d; text-decoration: none; }
   footer a:hover { color: var(--gold); }
 
   /* ANIMATIONS */
@@ -402,7 +402,7 @@
       <h1>Built by a<br><em>Practitioner,</em><br>For Practitioners</h1>
       <p>NyayIQ was born out of a simple frustration — spending hours every morning searching for relevant tax judgements across dozens of websites, only to find them buried in legalese with no practical insight.</p>
       <p>As a tax advocate practicing before the Delhi High Court, ITAT, and GST Appellate Authority for over a decade, I built the tool I always wished existed.</p>
-      <p style="color:#666;font-size:0.88rem;font-family:'IBM Plex Mono',monospace;">— Adv. Mohit Jain, Founder</p>
+      <p style="color:#4a6b5a;font-size:0.88rem;font-family:'IBM Plex Mono',monospace;">— Adv. Mohit Jain, Founder</p>
     </div>
     <div class="fade-up-2">
       <div class="profile-card">

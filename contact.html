@@ -7,14 +7,14 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#0d0d0d; --paper:#f5f0e8; --gold:#c9a84c; --gold-light:#e8d5a3; }
+  :root { --ink:#0d2818; --paper:#f0f7f4; --gold:#b8860b; --gold-light:#d4a017; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--ink); color:var(--paper); font-family:'DM Sans',sans-serif; min-height:100vh; }
+  body { background:#0d3320; color:var(--paper); font-family:'Times New Roman',Times,serif; min-height:100vh; }
 
-  header { background:var(--ink); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
+  header { background:#0d3320; padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
   .logo-text { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
-  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#888; text-transform:uppercase; letter-spacing:2px; }
-  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
+  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#ccc; text-transform:uppercase; letter-spacing:2px; }
+  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#ccc; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
   nav a:hover, nav a.active { color:var(--gold); }
   nav a.active { border-bottom:1px solid var(--gold); }
 
@@ -38,29 +38,29 @@
 
   .divider { border:none; border-top:1px solid #1a1a1a; margin:2rem 0; }
 
-  .entity-card { background:#111; border:1px solid #1e1e1e; padding:1.5rem; margin-bottom:1rem; }
+  .entity-card { background:#f0f7f4; border:1.5px solid #b8d4c4; padding:1.5rem; margin-bottom:1rem; }
   .entity-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--gold); margin-bottom:0.3rem; }
-  .entity-desc { font-size:0.82rem; color:#666; line-height:1.5; }
+  .entity-desc { font-size:0.82rem; color:#4a6b5a; line-height:1.5; }
 
   /* FORM SIDE */
   .form-section h2 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; margin-bottom:1.5rem; }
   .form-group { margin-bottom:1.25rem; }
   .form-group label { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:#777; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:0.4rem; }
   .form-group input, .form-group select, .form-group textarea {
-    width:100%; background:#111; border:1px solid #1e1e1e; color:var(--paper);
-    font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:0.75rem;
+    width:100%; background:#f0f7f4; border:1.5px solid #b8d4c4; color:var(--paper);
+    font-family:'Times New Roman',Times,serif; font-size:0.9rem; padding:0.75rem;
     outline:none; transition:border-color 0.2s;
   }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--gold); }
   .form-group textarea { min-height:140px; resize:vertical; }
-  .form-group select option { background:#111; }
+  .form-group select option { background:#f0f7f4; }
   .btn-gold { background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; font-weight:600; padding:0.85rem 2rem; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; width:100%; }
   .btn-gold:hover { background:var(--gold-light); }
   .success-msg { text-align:center; padding:1.5rem; background:#0a1a0a; border:1px solid #1a3a1a; color:#4ade80; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; display:none; margin-top:1rem; }
 
-  footer { background:#050505; border-top:1px solid #1a1a1a; padding:2rem; font-family:'IBM Plex Mono',monospace; margin-top:2rem; }
+  footer { background:#0d3320; border-top:1px solid #1a1a1a; padding:2rem; font-family:'IBM Plex Mono',monospace; margin-top:2rem; }
   .footer-bottom { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem; }
-  .footer-bottom span { font-size:0.65rem; color:#333; }
+  .footer-bottom span { font-size:0.65rem; color:#0d2818; }
   footer a { font-size:0.65rem; color:#444; text-decoration:none; }
   footer a:hover { color:var(--gold); }
 </style>
@@ -166,7 +166,7 @@
       ✓ Message received! We'll get back to you within 24 hours.
     </div>
     <p style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:#444;margin-top:1rem;line-height:1.6;">
-      ⚠️ This platform is for informational purposes only. For formal legal consultation, please contact MJ Lex Legal Chambers directly at <a href="/cdn-cgi/l/email-protection#a5c6cacbd1c4c6d1e5c8cfc9c0ddc9c0c2c4c98bc6cac8" style="color:#666;"><span class="__cf_email__" data-cfemail="f1929e9f85909285b19c9b9d94899d9496909ddf929e9c">[email&#160;protected]</span></a>
+      ⚠️ This platform is for informational purposes only. For formal legal consultation, please contact MJ Lex Legal Chambers directly at <a href="/cdn-cgi/l/email-protection#a5c6cacbd1c4c6d1e5c8cfc9c0ddc9c0c2c4c98bc6cac8" style="color:#4a6b5a;"><span class="__cf_email__" data-cfemail="f1929e9f85909285b19c9b9d94899d9496909ddf929e9c">[email&#160;protected]</span></a>
     </p>
   </div>
 

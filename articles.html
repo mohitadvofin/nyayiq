@@ -5,86 +5,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Articles — NyayIQ Tax Intelligence</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#0d0d0d; --paper:#f5f0e8; --gold:#c9a84c; --gold-light:#e8d5a3; --muted:#666; }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--ink); color:var(--paper); font-family:'DM Sans',sans-serif; }
+  :root {
+    --bg: #f0f7f4;
+    --bg2: #e6f2ed;
+    --ink: #0d2818;
+    --ink2: #1a3a28;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --green: #1a5c3a;
+    --green-dark: #0d3320;
+    --border: #b8d4c4;
+    --muted: #4a6b5a;
+    --white: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Times New Roman', Times, serif; }
 
-  header { background:var(--ink); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
-  .logo-text { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
-  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#888; text-transform:uppercase; letter-spacing:2px; }
-  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
-  nav a:hover, nav a.active { color:var(--gold); }
-  nav a.active { border-bottom:1px solid var(--gold); }
+  header { background: var(--green-dark); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
+  .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #aaa; text-transform: uppercase; letter-spacing: 2px; }
+  nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #ccc; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+  nav a:hover, nav a.active { color: var(--gold); }
+  nav a.active { border-bottom: 1px solid var(--gold); }
 
-  .page-header { padding:4rem 2rem 3rem; text-align:center; border-bottom:1px solid #1a1a1a; }
-  .page-header .label { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:1rem; }
-  .page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3.5rem); font-weight:900; }
-  .page-header h1 em { color:var(--gold); font-style:italic; }
-  .page-header p { color:#777; margin-top:1rem; max-width:500px; margin-left:auto; margin-right:auto; }
+  .page-header { padding: 4rem 2rem 3rem; text-align: center; border-bottom: 2px solid var(--border); background: var(--white); }
+  .page-header .label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--green); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+  .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,3.5rem); font-weight: 900; color: var(--ink); }
+  .page-header h1 em { color: var(--green); font-style: italic; }
+  .page-header p { color: var(--muted); margin-top: 1rem; max-width: 500px; margin-left: auto; margin-right: auto; }
 
-  .main { max-width:1100px; margin:0 auto; padding:3rem 2rem; }
+  .main { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
 
   /* CATEGORIES */
-  .cat-filter { display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:3rem; }
-  .cat-btn { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; padding:0.4rem 1rem; border:1px solid #222; color:#777; background:transparent; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; }
-  .cat-btn:hover, .cat-btn.active { border-color:var(--gold); color:var(--gold); }
+  .cat-filter { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 3rem; }
+  .cat-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; padding: 0.4rem 1rem; border: 1.5px solid var(--border); color: var(--muted); background: var(--white); cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; }
+  .cat-btn:hover, .cat-btn.active { border-color: var(--green); color: var(--green); background: var(--bg2); }
 
   /* ARTICLES GRID */
-  .articles-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1.5rem; }
-  .article-card { background:#111; border:1px solid #1e1e1e; padding:1.75rem; cursor:pointer; transition:all 0.2s; }
-  .article-card:hover { border-color:rgba(201,168,76,0.3); transform:translateY(-2px); }
-  .article-tag { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.75rem; }
-  .article-title { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; margin-bottom:0.75rem; line-height:1.4; }
-  .article-excerpt { font-size:0.85rem; color:#777; line-height:1.6; margin-bottom:1rem; }
-  .article-meta { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:#444; display:flex; gap:1rem; }
+  .articles-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap: 1.5rem; }
+  .article-card { background: var(--white); border: 1.5px solid var(--border); border-top: 3px solid var(--green); padding: 1.75rem; cursor: pointer; transition: all 0.2s; }
+  .article-card:hover { box-shadow: 0 4px 20px rgba(26,92,58,0.12); transform: translateY(-2px); }
+  .article-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1.4; color: var(--ink); }
+  .article-excerpt { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+  .article-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: #888; display: flex; gap: 1rem; }
+
+  /* USER BADGE */
+  .user-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; background: rgba(26,92,58,0.1); color: var(--green); border: 1px solid var(--green); padding: 0.15rem 0.5rem; border-radius: 2rem; text-transform: uppercase; letter-spacing: 1px; margin-left: auto; }
 
   /* ARTICLE MODAL */
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:500; overflow-y:auto; }
-  .modal-overlay.show { display:block; }
-  .modal { max-width:760px; margin:3rem auto; background:#0f0f0f; border:1px solid #222; padding:3rem; position:relative; }
-  .modal-close { position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; color:#666; font-size:1.5rem; cursor:pointer; }
-  .modal-close:hover { color:var(--gold); }
-  .modal-tag { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem; }
-  .modal-title { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3vw,2.2rem); font-weight:900; margin-bottom:1rem; line-height:1.3; }
-  .modal-meta { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#555; margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid #1a1a1a; }
-  .modal-body { font-size:0.95rem; line-height:1.8; color:#ccc; }
-  .modal-body p { margin-bottom:1.2rem; }
-  .modal-body h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--paper); margin:1.5rem 0 0.75rem; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; overflow-y: auto; }
+  .modal-overlay.show { display: block; }
+  .modal { max-width: 760px; margin: 3rem auto; background: var(--white); border: 1.5px solid var(--border); border-top: 4px solid var(--green); padding: 3rem; position: relative; }
+  .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+  .modal-close:hover { color: var(--ink); }
+  .modal-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem,3vw,2.2rem); font-weight: 900; margin-bottom: 1rem; line-height: 1.3; color: var(--ink); }
+  .modal-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1.5px solid var(--border); }
+  .modal-body { font-size: 0.95rem; line-height: 1.8; color: var(--ink2); }
+  .modal-body p { margin-bottom: 1.2rem; }
+  .modal-body h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ink); margin: 1.5rem 0 0.75rem; }
 
-  /* ADMIN PANEL */
-  .admin-toggle { text-align:center; margin:3rem 0 1rem; }
-  .admin-toggle button { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:#333; background:none; border:1px solid #1a1a1a; padding:0.4rem 1rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; }
-  .admin-toggle button:hover { color:#555; border-color:#333; }
-
-  .admin-panel { background:#080808; border:1px solid #1a1a1a; padding:2rem; margin-bottom:3rem; display:none; }
-  .admin-panel.show { display:block; }
-  .admin-panel h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--gold); margin-bottom:1.5rem; }
-  .form-group { margin-bottom:1.25rem; }
-  .form-group label { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#777; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:0.4rem; }
+  /* ADMIN / USER PANEL */
+  .admin-panel { background: var(--white); border: 1.5px solid var(--border); border-top: 4px solid var(--gold); padding: 2rem; margin-bottom: 3rem; display: none; }
+  .admin-panel.show { display: block; }
+  .admin-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ink); margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.4rem; }
   .form-group input, .form-group select, .form-group textarea {
-    width:100%; background:#111; border:1px solid #222; color:var(--paper);
-    font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:0.75rem;
-    outline:none; transition:border-color 0.2s;
+    width: 100%; background: var(--bg); border: 1.5px solid var(--border); color: var(--ink);
+    font-family: 'Times New Roman', serif; font-size: 0.9rem; padding: 0.75rem;
+    outline: none; transition: border-color 0.2s;
   }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--gold); }
-  .form-group textarea { min-height:200px; resize:vertical; }
-  .form-group select option { background:#111; }
-  .admin-pw { display:flex; gap:0.5rem; margin-bottom:1.5rem; }
-  .admin-pw input { flex:1; }
-  .btn-gold { background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; font-weight:600; padding:0.75rem 1.5rem; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; }
-  .btn-gold:hover { background:var(--gold-light); }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--green); }
+  .form-group textarea { min-height: 200px; resize: vertical; }
+  .form-group select option { background: white; }
+  .admin-pw { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .admin-pw input { flex: 1; }
+  .btn-green { background: var(--green); color: white; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600; padding: 0.75rem 1.5rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; }
+  .btn-green:hover { background: var(--green-dark); }
+  .btn-gold { background: var(--gold); color: var(--green-dark); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600; padding: 0.75rem 1.5rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; }
+  .btn-gold:hover { background: var(--gold-light); }
 
-  /* EMPTY STATE */
-  .empty { text-align:center; padding:4rem; color:#444; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; }
+  /* USER AUTH */
+  .user-panel { background: var(--bg2); border: 1.5px solid var(--border); border-top: 4px solid var(--green); padding: 2rem; margin-bottom: 3rem; display: none; }
+  .user-panel.show { display: block; }
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+  .auth-tab { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; padding: 0.6rem 1.5rem; background: none; border: none; cursor: pointer; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+  .auth-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
 
-  /* FOOTER */
-  footer { background:#050505; border-top:1px solid #1a1a1a; padding:2.5rem 2rem; font-family:'IBM Plex Mono',monospace; margin-top:4rem; }
-  .footer-bottom { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem; }
-  .footer-bottom span { font-size:0.65rem; color:#333; }
-  footer a { font-size:0.65rem; color:#444; text-decoration:none; }
-  footer a:hover { color:var(--gold); }
+  .empty { text-align: center; padding: 4rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; }
+
+  footer { background: var(--green-dark); border-top: 1px solid rgba(255,255,255,0.1); padding: 2.5rem 2rem; font-family: 'IBM Plex Mono', monospace; margin-top: 4rem; }
+  .footer-bottom { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; }
+  .footer-bottom span { font-size: 0.65rem; color: #555; }
+  footer a { font-size: 0.65rem; color: #777; text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+
+  /* USER ARTICLES SECTION */
+  .section-divider { border: none; border-top: 2px solid var(--border); margin: 3rem 0; }
+  .section-heading { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--ink); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .section-heading span { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--green); border: 1px solid var(--green); padding: 0.2rem 0.6rem; }
 </style>
 </head>
 <body>
@@ -105,7 +128,11 @@
     <a href="pricing.html">Pricing</a>
     <a href="contact.html">Contact</a>
   </nav>
-  <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.5rem 1.2rem;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Dashboard →</a>
+  <div style="display:flex;gap:0.75rem;align-items:center;">
+    <button onclick="toggleUserPanel()" id="userBtn" style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#ccc;padding:0.4rem 0.9rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='#ccc';">👤 Login</button>
+    <button onclick="toggleAdmin()" style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;background:var(--gold);border:none;color:var(--green-dark);padding:0.4rem 0.9rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px;font-weight:700;">⚙ Admin</button>
+    <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.5rem 1.2rem;background:var(--green);color:white;text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Dashboard →</a>
+  </div>
 </header>
 
 <div class="page-header">
@@ -116,28 +143,91 @@
 
 <div class="main">
 
-  <!-- CATEGORY FILTER -->
-  <div class="cat-filter">
-    <button class="cat-btn active" onclick="filterArticles('all', this)">All</button>
-    <button class="cat-btn" onclick="filterArticles('GST', this)">GST</button>
-    <button class="cat-btn" onclick="filterArticles('Income Tax', this)">Income Tax</button>
-    <button class="cat-btn" onclick="filterArticles('Customs', this)">Customs</button>
-    <button class="cat-btn" onclick="filterArticles('ITAT', this)">ITAT</button>
-    <button class="cat-btn" onclick="filterArticles('Appeals', this)">Appeals</button>
-  </div>
+  <!-- USER PANEL -->
+  <div class="user-panel" id="userPanel">
+    <div id="authSection">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
+      </div>
+      
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="loginEmail" placeholder="your@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="loginPassword" placeholder="Your password" />
+        </div>
+        <button class="btn-green" onclick="loginUser()">Login →</button>
+        <span id="loginMsg" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#c0392b;margin-left:1rem;"></span>
+      </div>
+      
+      <!-- REGISTER FORM -->
+      <div id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="regName" placeholder="Adv. Your Name" />
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="regEmail" placeholder="your@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="regPassword" placeholder="Min. 6 characters" />
+        </div>
+        <div class="form-group">
+          <label>Designation</label>
+          <input type="text" id="regDesignation" placeholder="e.g. Advocate, CA, Tax Consultant" />
+        </div>
+        <button class="btn-green" onclick="registerUser()">Create Account →</button>
+        <span id="regMsg" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#c0392b;margin-left:1rem;"></span>
+      </div>
+    </div>
 
-  <!-- ARTICLES GRID -->
-  <div class="articles-grid" id="articlesGrid"></div>
-  <div class="empty" id="emptyState" style="display:none;">No articles yet. Check back soon!</div>
-
-  <!-- ADMIN TOGGLE -->
-  <div class="admin-toggle">
-    <button onclick="toggleAdmin()">⚙ Admin</button>
+    <!-- LOGGED IN USER AREA -->
+    <div id="userLoggedIn" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);" id="userGreeting">Welcome!</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:0.2rem;" id="userEmail2"></div>
+        </div>
+        <button onclick="logoutUser()" style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;background:none;border:1.5px solid var(--border);color:var(--muted);padding:0.4rem 1rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px;">Logout</button>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1rem;color:var(--ink);">Post an Article</h3>
+      <div class="form-group">
+        <label>Article Title *</label>
+        <input type="text" id="uArtTitle" placeholder="e.g. GST Refund on Export: Key HC Ruling Explained" />
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="uArtCategory">
+          <option value="GST">GST</option>
+          <option value="Income Tax">Income Tax</option>
+          <option value="Customs">Customs</option>
+          <option value="ITAT">ITAT</option>
+          <option value="Appeals">Appeals</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Short Excerpt</label>
+        <input type="text" id="uArtExcerpt" placeholder="2-3 line summary..." />
+      </div>
+      <div class="form-group">
+        <label>Full Article Content *</label>
+        <textarea id="uArtContent" placeholder="Write full article here. Use blank lines to separate paragraphs. Use ### for headings."></textarea>
+      </div>
+      <button class="btn-green" onclick="publishUserArticle()">Publish Article →</button>
+      <span id="uPublishMsg" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--green);margin-left:1rem;"></span>
+    </div>
   </div>
 
   <!-- ADMIN PANEL -->
   <div class="admin-panel" id="adminPanel">
-    <h3>Post New Article</h3>
+    <h3>⚙ Admin — Post Article</h3>
     <div class="admin-pw" id="pwSection">
       <input type="password" id="adminPw" placeholder="Enter admin password..." />
       <button class="btn-gold" onclick="checkPassword()">Unlock</button>
@@ -162,17 +252,31 @@
         <input type="text" id="artAuthor" value="Adv. Mohit Jain" />
       </div>
       <div class="form-group">
-        <label>Short Excerpt (shown in card)</label>
-        <input type="text" id="artExcerpt" placeholder="2-3 line summary of the article..." />
+        <label>Short Excerpt</label>
+        <input type="text" id="artExcerpt" placeholder="2-3 line summary..." />
       </div>
       <div class="form-group">
         <label>Full Article Content *</label>
-        <textarea id="artContent" placeholder="Write full article here. Use blank lines to separate paragraphs. Use ### for headings."></textarea>
+        <textarea id="artContent" placeholder="Write full article here. Use ### for headings."></textarea>
       </div>
       <button class="btn-gold" onclick="publishArticle()">Publish Article</button>
-      <span id="publishMsg" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#4ade80;margin-left:1rem;"></span>
+      <span id="publishMsg" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--green);margin-left:1rem;"></span>
     </div>
   </div>
+
+  <!-- CATEGORY FILTER -->
+  <div class="cat-filter">
+    <button class="cat-btn active" onclick="filterArticles('all', this)">All</button>
+    <button class="cat-btn" onclick="filterArticles('GST', this)">GST</button>
+    <button class="cat-btn" onclick="filterArticles('Income Tax', this)">Income Tax</button>
+    <button class="cat-btn" onclick="filterArticles('Customs', this)">Customs</button>
+    <button class="cat-btn" onclick="filterArticles('ITAT', this)">ITAT</button>
+    <button class="cat-btn" onclick="filterArticles('Appeals', this)">Appeals</button>
+  </div>
+
+  <!-- ARTICLES GRID -->
+  <div class="articles-grid" id="articlesGrid"></div>
+  <div class="empty" id="emptyState" style="display:none;">No articles yet. Check back soon!</div>
 
 </div>
 
@@ -184,7 +288,6 @@
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-bottom">
     <span>© 2026 NyayIQ · <a href="home.html">Home</a> · <a href="contact.html">Contact</a> · <a href="#">Privacy</a></span>
@@ -195,8 +298,9 @@
 <script>
 const ADMIN_PASSWORD = 'nyayiq2026';
 const STORAGE_KEY = 'nyayiq_articles';
+const USER_STORAGE_KEY = 'nyayiq_users';
+const CURRENT_USER_KEY = 'nyayiq_current_user';
 
-// Default articles
 const DEFAULT_ARTICLES = [
   {
     id: 1,
@@ -205,7 +309,8 @@ const DEFAULT_ARTICLES = [
     author: "Adv. Mohit Jain",
     date: "March 10, 2026",
     excerpt: "Exporters often face unnecessary refund rejections due to procedural lapses. This article covers the key requirements under Rule 89 and recent HC rulings.",
-    content: `### Overview\nGST refund on export of services is one of the most litigated areas in indirect tax practice. Despite clear statutory provisions, exporters routinely face rejections on technical grounds.\n\n### Key Requirements Under Rule 89\nTo claim a refund under Rule 89(4) for zero-rated supply without payment of integrated tax, the applicant must satisfy conditions relating to the statement of invoices, bank realization certificate (FIRC/BRC), and a declaration that services were actually exported.\n\n### Common Grounds for Rejection\nAuthorities frequently reject claims citing mismatch in GSTR-1 vs GSTR-3B, delay in BRC submission, or non-filing of Form RFD-01 within the limitation period. Recent High Court rulings have consistently held that procedural technicalities cannot override substantive entitlement.\n\n### Key Judgements\nThe Bombay High Court in Colgate-Palmolive vs UOI held that minor procedural defects in refund applications cannot be a ground for outright rejection without giving opportunity to rectify. The Delhi HC has similarly held in multiple cases that the limitation for refund under Section 54 runs from the date of export invoice, not from the date of filing GSTR-3B.\n\n### Practitioner's Note\nAlways ensure your client files RFD-01 within 2 years of the relevant date. Keep FIRC/BRC documentation ready. If rejected, challenge on grounds of natural justice — non-supply of SCN or opportunity to respond is a strong ground before the Appellate Authority.`
+    content: `### Overview\nGST refund on export of services is one of the most litigated areas in indirect tax practice. Despite clear statutory provisions, exporters routinely face rejections on technical grounds.\n\n### Key Requirements Under Rule 89\nTo claim a refund under Rule 89(4) for zero-rated supply without payment of integrated tax, the applicant must satisfy conditions relating to the statement of invoices, bank realization certificate (FIRC/BRC), and a declaration that services were actually exported.\n\n### Common Grounds for Rejection\nAuthorities frequently reject claims citing mismatch in GSTR-1 vs GSTR-3B, delay in BRC submission, or non-filing of Form RFD-01 within the limitation period. Recent High Court rulings have consistently held that procedural technicalities cannot override substantive entitlement.\n\n### Practitioner's Note\nAlways ensure your client files RFD-01 within 2 years of the relevant date. Keep FIRC/BRC documentation ready. If rejected, challenge on grounds of natural justice.`,
+    isAdmin: true
   },
   {
     id: 2,
@@ -214,41 +319,145 @@ const DEFAULT_ARTICLES = [
     author: "Adv. Mohit Jain",
     date: "March 8, 2026",
     excerpt: "The Finance Act 2021 overhauled reassessment proceedings under the Income Tax Act. This piece examines how High Courts have interpreted the new regime.",
-    content: `### Background\nThe Finance Act 2021 substituted Sections 147-151 with a completely new reassessment framework effective from April 1, 2021. The new regime introduced Section 148A which requires the AO to conduct a preliminary enquiry and give the assessee an opportunity to be heard before issuing notice under Section 148.\n\n### The Section 148A Procedure\nUnder Section 148A, the AO must: (a) conduct an enquiry with prior approval of the specified authority; (b) provide the assessee with information or material on the basis of which the case was selected; (c) give the assessee 7 days (extendable to 30 days) to respond; and (d) pass an order determining whether it is a fit case for issue of notice under Section 148.\n\n### High Court Interpretation\nHigh Courts across India have consistently held that the procedure under Section 148A is mandatory and not directory. Where the AO has issued Section 148 notice without following Section 148A procedure, courts have quashed such notices. The Supreme Court in Union of India vs Ashish Agarwal clarified the position regarding notices issued during the transitional period.\n\n### Critical Limitation Issue\nFor cases beyond 3 years, the new regime requires the income escaping assessment to exceed Rs. 50 lakh. Several High Courts have held that this is a jurisdictional requirement — AOs cannot issue notices for small amounts beyond the 3-year window.\n\n### Practitioner's Note\nChallenge any Section 148 notice where Section 148A procedure was not followed. Specifically examine: (1) Was prior approval obtained? (2) Was material disclosed to assessee? (3) Was 7-day minimum opportunity given? (4) Was an order under 148A(d) passed? Absence of any of these is a valid ground for writ.`
+    content: `### Background\nThe Finance Act 2021 substituted Sections 147-151 with a completely new reassessment framework effective from April 1, 2021.\n\n### The Section 148A Procedure\nUnder Section 148A, the AO must conduct an enquiry with prior approval, provide information to the assessee, give 7-30 days to respond, and pass an order determining whether it is a fit case for notice under Section 148.\n\n### High Court Interpretation\nHigh Courts across India have consistently held that the procedure under Section 148A is mandatory and not directory. Where the AO has issued Section 148 notice without following Section 148A procedure, courts have quashed such notices.\n\n### Practitioner's Note\nChallenge any Section 148 notice where Section 148A procedure was not followed. Examine: (1) Was prior approval obtained? (2) Was material disclosed? (3) Was opportunity given? (4) Was an order under 148A(d) passed?`,
+    isAdmin: true
   }
 ];
 
 let articles = [];
 let currentFilter = 'all';
 
+// ─── USER AUTH ──────────────────────────────────────────────────
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]'); } catch(e) { return []; }
+}
+function saveUsers(users) { localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users)); }
+function getCurrentUser() {
+  try { return JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || 'null'); } catch(e) { return null; }
+}
+function setCurrentUser(user) { localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user)); }
+
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+}
+
+function registerUser() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value.trim();
+  const designation = document.getElementById('regDesignation').value.trim();
+  const msg = document.getElementById('regMsg');
+  
+  if (!name || !email || !password) { msg.textContent = 'Please fill all required fields.'; return; }
+  if (password.length < 6) { msg.textContent = 'Password must be at least 6 characters.'; return; }
+  
+  const users = getUsers();
+  if (users.find(u => u.email === email)) { msg.textContent = 'Email already registered. Please login.'; return; }
+  
+  const newUser = { id: Date.now(), name, email, password, designation, createdAt: new Date().toISOString() };
+  users.push(newUser);
+  saveUsers(users);
+  setCurrentUser(newUser);
+  msg.style.color = 'var(--green)';
+  msg.textContent = '✓ Account created! Welcome, ' + name + '!';
+  setTimeout(() => showLoggedInUI(newUser), 1000);
+}
+
+function loginUser() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const msg = document.getElementById('loginMsg');
+  
+  if (!email || !password) { msg.textContent = 'Please fill all fields.'; return; }
+  
+  const users = getUsers();
+  const user = users.find(u => u.email === email && u.password === password);
+  
+  if (!user) { msg.textContent = 'Invalid email or password.'; return; }
+  
+  setCurrentUser(user);
+  showLoggedInUI(user);
+}
+
+function showLoggedInUI(user) {
+  document.getElementById('authSection').style.display = 'none';
+  document.getElementById('userLoggedIn').style.display = 'block';
+  document.getElementById('userGreeting').textContent = 'Welcome, ' + user.name + (user.designation ? ' (' + user.designation + ')' : '') + '!';
+  document.getElementById('userEmail2').textContent = user.email;
+  document.getElementById('userBtn').textContent = '👤 ' + user.name.split(' ')[0];
+}
+
+function logoutUser() {
+  localStorage.removeItem(CURRENT_USER_KEY);
+  document.getElementById('authSection').style.display = 'block';
+  document.getElementById('userLoggedIn').style.display = 'none';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('userBtn').textContent = '👤 Login';
+  document.getElementById('userPanel').classList.remove('show');
+}
+
+function toggleUserPanel() {
+  document.getElementById('userPanel').classList.toggle('show');
+  document.getElementById('adminPanel').classList.remove('show');
+}
+
+function publishUserArticle() {
+  const user = getCurrentUser();
+  if (!user) return;
+  const title = document.getElementById('uArtTitle').value.trim();
+  const content = document.getElementById('uArtContent').value.trim();
+  const msg = document.getElementById('uPublishMsg');
+  if (!title || !content) { msg.style.color = '#c0392b'; msg.textContent = 'Title and content are required!'; return; }
+  
+  const newArticle = {
+    id: Date.now(),
+    title,
+    category: document.getElementById('uArtCategory').value,
+    author: user.name + (user.designation ? ', ' + user.designation : ''),
+    date: new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}),
+    excerpt: document.getElementById('uArtExcerpt').value || content.substring(0, 120) + '...',
+    content,
+    isUser: true,
+    userId: user.id
+  };
+  
+  articles.unshift(newArticle);
+  saveArticles();
+  renderArticles();
+  ['uArtTitle','uArtExcerpt','uArtContent'].forEach(id => document.getElementById(id).value = '');
+  msg.style.color = 'var(--green)';
+  msg.textContent = '✓ Published successfully!';
+  setTimeout(() => msg.textContent = '', 3000);
+}
+
+// ─── ARTICLES CRUD ──────────────────────────────────────────────
 function loadArticles() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     articles = stored ? JSON.parse(stored) : DEFAULT_ARTICLES;
-  } catch(e) {
-    articles = DEFAULT_ARTICLES;
-  }
+  } catch(e) { articles = DEFAULT_ARTICLES; }
   renderArticles();
 }
 
-function saveArticles() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
-}
+function saveArticles() { localStorage.setItem(STORAGE_KEY, JSON.stringify(articles)); }
 
 function renderArticles() {
   const grid = document.getElementById('articlesGrid');
   const empty = document.getElementById('emptyState');
   const filtered = currentFilter === 'all' ? articles : articles.filter(a => a.category === currentFilter);
-  
-  if (filtered.length === 0) {
-    grid.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
+  if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
   empty.style.display = 'none';
   grid.innerHTML = filtered.map(a => `
     <div class="article-card" onclick="openArticle(${a.id})">
-      <div class="article-tag">${a.category}</div>
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+        <div class="article-tag">${a.category}</div>
+        ${a.isUser ? '<span class="user-badge">Community</span>' : ''}
+        ${a.isAdmin ? '<span class="user-badge" style="background:rgba(184,134,11,0.1);color:var(--gold);border-color:var(--gold);">Editorial</span>' : ''}
+      </div>
       <div class="article-title">${a.title}</div>
       <div class="article-excerpt">${a.excerpt || ''}</div>
       <div class="article-meta">
@@ -274,9 +483,8 @@ function openArticle(id) {
     if (line.trim() === '') return '';
     return `<p>${line}</p>`;
   }).join('');
-  
   document.getElementById('modalBody').innerHTML = `
-    <div class="modal-tag">${a.category}</div>
+    <div class="modal-tag">${a.category}${a.isUser ? ' · Community Contribution' : ''}</div>
     <div class="modal-title">${a.title}</div>
     <div class="modal-meta">${a.author || 'NyayIQ'} · ${a.date || ''}</div>
     <div class="modal-body">${bodyHtml}</div>
@@ -292,6 +500,7 @@ function closeModal(e) {
 
 function toggleAdmin() {
   document.getElementById('adminPanel').classList.toggle('show');
+  document.getElementById('userPanel').classList.remove('show');
 }
 
 function checkPassword() {
@@ -299,16 +508,13 @@ function checkPassword() {
   if (pw === ADMIN_PASSWORD) {
     document.getElementById('pwSection').style.display = 'none';
     document.getElementById('articleForm').style.display = 'block';
-  } else {
-    alert('Wrong password!');
-  }
+  } else { alert('Wrong password!'); }
 }
 
 function publishArticle() {
   const title = document.getElementById('artTitle').value.trim();
   const content = document.getElementById('artContent').value.trim();
   if (!title || !content) { alert('Title and content are required!'); return; }
-  
   const newArticle = {
     id: Date.now(),
     title,
@@ -316,20 +522,22 @@ function publishArticle() {
     author: document.getElementById('artAuthor').value || 'Adv. Mohit Jain',
     date: new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}),
     excerpt: document.getElementById('artExcerpt').value || content.substring(0, 120) + '...',
-    content
+    content,
+    isAdmin: true
   };
-  
   articles.unshift(newArticle);
   saveArticles();
   renderArticles();
-  
-  // Reset form
   ['artTitle','artExcerpt','artContent'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('publishMsg').textContent = '✓ Published!';
-  setTimeout(() => document.getElementById('publishMsg').textContent = '', 3000);
+  const msg = document.getElementById('publishMsg');
+  msg.textContent = '✓ Published!';
+  setTimeout(() => msg.textContent = '', 3000);
 }
 
+// Init
 loadArticles();
+const currentUser = getCurrentUser();
+if (currentUser) showLoggedInUI(currentUser);
 </script>
 </body>
 </html>
