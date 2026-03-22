@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NyayIQ — Daily Tax Intelligence</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='28'%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --crimson: #8b1a1a;
+    --teal: #1a5c5c;
+    --muted: #6b6458;
+    --border: #d4c9b5;
+    --card-bg: #faf7f2;
+    --tag-it: #8b1a1a;
+    --tag-gst: #1a5c5c;
+    --tag-customs: #2c4a7c;
+    --tag-itat: #5c3a1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    border-bottom: 3px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+  }
+  .logo-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .date-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: #888;
+  }
+
+  /* HERO TICKER */
+  .ticker-bar {
+    background: var(--crimson);
+    color: white;
+    padding: 0.4rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: scroll 40s linear infinite;
+  }
+  .ticker-inner span { margin: 0 3rem; }
+  @keyframes scroll {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100%); }
+  }
+
+  /* LAYOUT */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr 280px;
+    gap: 0;
+    min-height: calc(100vh - 100px);
+  }
+
+  /* SIDEBAR LEFT */
+  .sidebar-left {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.5rem 1.2rem;
+    border-right: 1px solid #222;
+  }
+  .sidebar-section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #333;
+  }
+  .filter-group { margin-bottom: 1.5rem; }
+  .filter-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #ccc;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 0.2rem;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .filter-btn:hover { background: #1a1a1a; color: white; }
+  .filter-btn.active { background: var(--gold); color: var(--ink); font-weight: 600; }
+  .filter-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    background: #333;
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+  .filter-btn.active .filter-count { background: rgba(0,0,0,0.2); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .stat-box {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 0.7rem 0.6rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.2rem;
+    display: block;
+  }
+
+  /* MAIN FEED */
+  .main-feed {
+    padding: 1.5rem 2rem;
+    background: var(--paper);
+  }
+  .feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .feed-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.82rem;
+    width: 220px;
+  }
+  .search-bar input {
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    width: 100%;
+    background: transparent;
+    color: var(--ink);
+  }
+
+  /* JUDGEMENT CARD */
+  .judgement-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .judgement-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+  .judgement-card[data-type="GST"]::before { background: var(--tag-gst); }
+  .judgement-card[data-type="Income Tax"]::before { background: var(--tag-it); }
+  .judgement-card[data-type="Customs"]::before { background: var(--tag-customs); }
+  .judgement-card[data-type="ITAT"]::before { background: var(--tag-itat); }
+  .judgement-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); transform: translateY(-1px); }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    color: white;
+  }
+  .tag-GST { background: var(--tag-gst); }
+  .tag-IT { background: var(--tag-it); }
+  .tag-Customs { background: var(--tag-customs); }
+  .tag-ITAT { background: var(--tag-itat); }
+  .tag-SC { background: #333; }
+  .tag-HC { background: #555; }
+  .card-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+  .card-parties {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+  }
+  .card-summary {
+    font-size: 0.83rem;
+    line-height: 1.6;
+    color: #444;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.9rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--border);
+  }
+  .impact-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .impact-HIGH { background: #fee2e2; color: #991b1b; }
+  .impact-MEDIUM { background: #fef3c7; color: #92400e; }
+  .impact-LOW { background: #d1fae5; color: #065f46; }
+  .card-action-btns {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .btn-sm {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-outline:hover { border-color: var(--ink); color: var(--ink); }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--gold);
+    border: 1.5px solid var(--ink);
+  }
+  .btn-primary:hover { background: var(--crimson); border-color: var(--crimson); color: white; }
+
+  /* AI SUMMARY PANEL */
+  .ai-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 480px;
+    height: 100vh;
+    background: white;
+    border-left: 2px solid var(--gold);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+  }
+  .ai-panel.open { transform: translateX(0); }
+  .ai-panel-header {
+    background: var(--ink);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--gold);
+  }
+  .ai-panel-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .close-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0 0.3rem;
+    line-height: 1;
+  }
+  .close-btn:hover { color: white; }
+  .ai-panel-body { flex: 1; overflow-y: auto; padding: 1.5rem; }
+
+  .generating-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border: 1px solid #333;
+    margin-bottom: 1rem;
+  }
+  .gen-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .gen-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .summary-section { margin-bottom: 1.5rem; }
+  .summary-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .summary-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .summary-content {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #333;
+  }
+  .summary-list {
+    list-style: none;
+    padding: 0;
+  }
+  .summary-list li {
+    font-size: 0.83rem;
+    line-height: 1.6;
+    color: #333;
+    padding: 0.3rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .summary-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.75rem;
+  }
+  .practitioner-box {
+    background: #0d0d0d;
+    color: var(--gold-light);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    font-size: 0.83rem;
+    line-height: 1.7;
+    border-left: 3px solid var(--gold);
+  }
+  .practitioner-box strong {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  /* SIDEBAR RIGHT */
+  .sidebar-right {
+    background: #0f0f0f;
+    border-left: 1px solid #222;
+    padding: 1.5rem 1.2rem;
+  }
+  .trending-item {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .trending-item:last-child { border-bottom: none; }
+  .trending-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--border);
+    display: block;
+    line-height: 1;
+  }
+  .trending-text {
+    font-size: 0.78rem;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.4;
+    margin-top: 0.2rem;
+  }
+  .trending-court {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: #666;
+    margin-top: 0.2rem;
+  }
+
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    text-align: center;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+  }
+  .upload-zone:hover { border-color: var(--gold); background: #1a1500; }
+  .upload-zone-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .upload-zone-text { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .upload-zone-btn {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--crimson);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* OVERLAY */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 150;
+    display: none;
+  }
+  .overlay.show { display: block; }
+
+  /* Streaming text */
+  .streaming-text { white-space: pre-wrap; }
+
+  @media (max-width: 1024px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .sidebar-left, .sidebar-right { display: none; }
+    .ai-panel { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <a href="home.html" style="text-decoration:none;display:flex;align-items:baseline;gap:0.5rem;">
+      <span class="logo-text">NyayIQ</span>
+      <span class="logo-sub">Tax Intelligence</span>
+    </a>
+  </div>
+  <nav style="display:flex;gap:1.5rem;align-items:center;">
+    <a href="home.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#888;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Home</a>
+    <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--gold);">Dashboard</a>
+    <a href="articles.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#888;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Articles</a>
+    <a href="about.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#888;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">About</a>
+    <a href="drafts.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#888;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Drafts</a>
+    <a href="pricing.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#c9a84c;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Pricing</a>
+    <a href="contact.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#888;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Contact</a>
+  </nav>
+  <div class="header-right">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      Live Feed
+    </div>
+    <div class="date-display" id="dateDisplay"></div>
+    <button onclick="openApiModal()" id="apiBtn" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;background:#1a1a1a;border:1px solid #444;color:#888;padding:5px 12px;border-radius:4px;cursor:pointer;">⚙ API Key</button>
+  </div>
+</header>
+
+<!-- API KEY MODAL -->
+<div id="apiModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:12px;padding:2rem;width:480px;max-width:90vw;border-top:4px solid #c9a84c;">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.4rem;">Claude API Key</h2>
+    <p style="font-size:0.8rem;color:#666;margin-bottom:1.2rem;line-height:1.6;">Enter your Anthropic API key — it will be saved only in your browser and never shared anywhere.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="width:100%;padding:0.7rem 1rem;border:1.5px solid #ddd;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;outline:none;margin-bottom:1rem;">
+    <div style="display:flex;gap:0.8rem;justify-content:flex-end;">
+      <button onclick="closeApiModal()" style="padding:8px 20px;border:1.5px solid #ddd;background:white;border-radius:6px;cursor:pointer;font-size:0.82rem;">Cancel</button>
+      <button onclick="saveApiKey()" style="padding:8px 20px;background:#0d0d0d;color:#c9a84c;border:none;border-radius:6px;cursor:pointer;font-size:0.82rem;font-weight:600;">Save Key ✓</button>
+    </div>
+    <p style="font-size:0.72rem;color:#aaa;margin-top:1rem;">🔒 Your key is stored only in your browser's local storage — it never leaves your device.</p>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-inner" id="tickerInner">
+    <span>⚖️ NyayIQ — India's First AI-Powered Tax Judgement Intelligence Platform</span>
+    <span>📌 Daily direct & indirect tax judgements — Supreme Court, High Courts, ITAT, GST Tribunal</span>
+    <span>🤖 Instant AI legal summary — Practitioner's Note for every judgement</span>
+    <span>📄 Upload any judgement PDF — get instant AI-powered legal analysis</span>
+    <span>🏛️ Supreme Court · Delhi HC · Bombay HC · ITAT · GST AAR/AAAR · Customs</span>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar-left">
+    <div class="filter-group">
+      <div class="sidebar-section-title">Tax Type</div>
+      <button class="filter-btn active" onclick="filterCards('all', this)">All Taxes <span class="filter-count" id="count-all">0</span></button>
+      <button class="filter-btn" onclick="filterCards('GST', this)">GST <span class="filter-count" id="count-GST">0</span></button>
+      <button class="filter-btn" onclick="filterCards('Income Tax', this)">Income Tax <span class="filter-count" id="count-IT">0</span></button>
+      <button class="filter-btn" onclick="filterCards('Customs', this)">Customs / Excise <span class="filter-count" id="count-Customs">0</span></button>
+      <button class="filter-btn" onclick="filterCards('ITAT', this)">ITAT <span class="filter-count" id="count-ITAT">0</span></button>
+    </div>
+    <div class="filter-group">
+      <div class="sidebar-section-title">Forum</div>
+      <button class="filter-btn">Supreme Court</button>
+      <button class="filter-btn">Delhi High Court</button>
+      <button class="filter-btn">Bombay High Court</button>
+      <button class="filter-btn">ITAT</button>
+      <button class="filter-btn">GST AAR/AAAR</button>
+    </div>
+    <div class="filter-group">
+      <div class="sidebar-section-title">Today's Stats</div>
+      <div class="stats-grid">
+        <div class="stat-box"><span class="stat-num" id="stat-total">0</span><span class="stat-label">Total</span></div>
+        <div class="stat-box"><span class="stat-num" id="stat-today">0</span><span class="stat-label">Today</span></div>
+        <div class="stat-box"><span class="stat-num" id="stat-high">0</span><span class="stat-label">High Imp</span></div>
+        <div class="stat-box"><span class="stat-num" id="stat-gst">0</span><span class="stat-label">GST</span></div>
+      </div>
+    </div>
+
+    <!-- AI USAGE COUNTER -->
+    <div style="margin-top:1.5rem;background:#1a1a1a;border:1px solid #2a2a2a;padding:1rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">AI Summaries</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#aaa;" id="usageText">0 / 5 used</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:#555;">Free Plan</span>
+      </div>
+      <div style="background:#111;border-radius:2px;height:4px;overflow:hidden;">
+        <div id="usageBar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;border-radius:2px;"></div>
+      </div>
+      <a href="pricing.html" style="display:block;margin-top:0.75rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Upgrade to Pro →</a>
+    </div>
+  </aside>
+
+  <!-- MAIN FEED -->
+  <main class="main-feed">
+    <div class="feed-header">
+      <div class="feed-title">Today's Judgements</div>
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Search case, section, topic..." oninput="searchJudgements(this.value)">
+      </div>
+    </div>
+
+    <div id="judgementFeed">
+      <!-- Cards will be injected here -->
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sidebar-right">
+    <div class="sidebar-section-title">Trending This Week</div>
+    <div id="trendingList"></div>
+
+    <div class="upload-zone" onclick="document.getElementById('pdfUpload').click()">
+      <div class="upload-zone-icon">📄</div>
+      <div class="upload-zone-text">Upload any judgement PDF to get instant AI summary</div>
+      <div class="upload-zone-btn">Browse PDF</div>
+      <input type="file" id="pdfUpload" accept=".pdf,.txt" style="display:none" onchange="handleFileUpload(event)">
+    </div>
+
+    <!-- NEWSLETTER CTA -->
+    <div onclick="openNewsletterModal()" style="margin-top:1.5rem;background:linear-gradient(135deg,#111,#1a1500);border:1px solid rgba(201,168,76,0.3);padding:1.25rem;cursor:pointer;text-align:center;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.6)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.3)'">
+      <div style="font-size:1.3rem;margin-bottom:0.5rem;">📧</div>
+      <div style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;margin-bottom:0.3rem;">Daily Email Digest</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#888;">Top judgements every morning →</div>
+    </div>
+
+    <!-- ABOUT AUTHOR -->
+    <div style="margin-top:1.5rem;background:#111;border:1px solid #1e1e1e;padding:1.25rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">Curated By</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.3rem;color:var(--paper);">Adv. Mohit Jain</div>
+      <div style="font-size:0.78rem;color:#888;line-height:1.5;margin-bottom:0.75rem;">Tax Advocate · 10+ years · Delhi HC, ITAT, GST Appellate Authority</div>
+      <a href="contact.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Contact →</a>
+    </div>
+  </aside>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+<!-- AI SUMMARY PANEL -->
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-panel-header">
+    <div class="ai-panel-title">⚖️ AI Legal Summary</div>
+    <button class="close-btn" onclick="closePanel()">✕</button>
+  </div>
+  <div class="ai-panel-body" id="aiPanelBody">
+    <!-- Generated content here -->
+  </div>
+</div>
+
+<script>
+const JUDGEMENTS = []; // Sample cases hata diye — sirf real uploads dikhenge
+
+const TRENDING = [
+  { num: "01", text: "GSTR-2A Mismatch — ITC Credit Rules", court: "Multiple HCs" },
+  { num: "02", text: "Section 148A Reopening — Validity", court: "Delhi HC" },
+  { num: "03", text: "Employee vs Contractor — GST", court: "AAR Karnataka" },
+  { num: "04", text: "Capital Gains on Inherited Property", court: "ITAT Delhi" },
+  { num: "05", text: "Rule 86B — Cash Ledger Restriction", court: "SC" },
+];
+
+// ─── PAYWALL & USAGE TRACKING ──────────────────────────────────
+const FREE_LIMIT = 5;
+const USAGE_KEY = 'nyayiq_ai_usage';
+const USAGE_MONTH_KEY = 'nyayiq_ai_month';
+
+function getUsage() {
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const storedMonth = localStorage.getItem(USAGE_MONTH_KEY);
+  if (storedMonth !== currentMonth) {
+    localStorage.setItem(USAGE_MONTH_KEY, currentMonth);
+    localStorage.setItem(USAGE_KEY, '0');
+  }
+  return parseInt(localStorage.getItem(USAGE_KEY) || '0');
+}
+
+function incrementUsage() {
+  const current = getUsage();
+  localStorage.setItem(USAGE_KEY, String(current + 1));
+  updateUsageUI();
+}
+
+function updateUsageUI() {
+  const used = getUsage();
+  const pct = Math.min((used / FREE_LIMIT) * 100, 100);
+  const el = document.getElementById('usageText');
+  const bar = document.getElementById('usageBar');
+  if (el) el.textContent = `${used} / ${FREE_LIMIT} used`;
+  if (bar) {
+    bar.style.width = pct + '%';
+    bar.style.background = used >= FREE_LIMIT ? '#ef4444' : used >= 3 ? '#f59e0b' : 'var(--gold)';
+  }
+}
+
+function showPaywall() {
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('aiPanel').classList.add('open');
+  const body = document.getElementById('aiPanelBody');
+  body.innerHTML = `
+    <div style="text-align:center;padding:3rem 1rem;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🔒</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.75rem;">Free Limit Reached</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#888;margin-bottom:2rem;line-height:1.6;">You've used all <strong style="color:var(--paper);">5 free AI Summaries</strong> this month.<br>Upgrade to Pro for unlimited access.</div>
+      <a href="pricing.html" style="display:inline-block;background:var(--gold);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;font-weight:700;padding:0.9rem 2rem;text-decoration:none;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Upgrade to Pro — ₹999/month →</a>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#555;margin-top:0.75rem;">Counter resets on the 1st of every month</div>
+    </div>
+  `;
+}
+
+// ─── END PAYWALL ────────────────────────────────────────────────
+
+// Render cards — old function (kept for openSummary compatibility)
+function renderCards(filter = 'all') {
+  // Now handled by renderAllCards
+}
+
+// Render trending
+function renderTrending() {
+  document.getElementById('trendingList').innerHTML = TRENDING.map(t => `
+    <div class="trending-item">
+      <span class="trending-num">${t.num}</span>
+      <div class="trending-text">${t.text}</div>
+      <div class="trending-court">${t.court}</div>
+    </div>
+  `).join('');
+}
+
+// Filter
+function filterCards(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(type);
+}
+
+// Open summary panel with Claude API
+async function openSummary(id) {
+  const j = JUDGEMENTS.find(x => x.id === id);
+  if (!j) return;
+
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('aiPanel').classList.add('open');
+
+  const body = document.getElementById('aiPanelBody');
+  body.innerHTML = `
+    <div style="margin-bottom:1rem;">
+      <div class="card-meta" style="margin-bottom:0.5rem;">
+        <span class="tag tag-${j.type === 'Income Tax' ? 'IT' : j.type}">${j.type}</span>
+        <span class="tag tag-${j.court.includes('Supreme') ? 'SC' : 'HC'}">${j.court}</span>
+        <span class="impact-badge impact-${j.impact}" style="margin-left:auto;">${j.impact} IMPACT</span>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;line-height:1.4;margin-bottom:0.3rem;">${j.title}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);">${j.parties}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--gold);margin-top:0.3rem;">${j.section} · ${j.date}</div>
+    </div>
+    <div class="generating-indicator" id="genIndicator">
+      <div class="gen-spinner"></div>
+      <span class="gen-text">AI analysis in progress — generating legal summary...</span>
+    </div>
+    <div id="aiSummaryContent"></div>
+  `;
+
+  // Call Claude API
+  try {
+    const prompt = `You are a senior Indian tax advocate with 15+ years of experience. Analyze this judgement and provide a structured legal summary.
+
+JUDGEMENT DETAILS:
+Title: ${j.title}
+Parties: ${j.parties}
+Court: ${j.court}
+Date: ${j.date}
+Tax Type: ${j.type}
+Section: ${j.section}
+Facts: ${j.summary}
+
+Provide a structured analysis with these exact sections:
+1. BACKGROUND (2-3 sentences of context)
+2. CORE ISSUE (what legal question was before the court)
+3. COURT'S REASONING (ratio decidendi in simple terms)
+4. KEY HOLDINGS (3-4 bullet points of what was actually decided)
+5. IMPACT ON ASSESSEES (who is affected and how)
+6. PRACTITIONER'S NOTE (specific action items for tax advocates - be direct and actionable)
+
+Keep language precise but accessible. Avoid Latin legalese unless explaining it. Write for Indian tax practitioners.`;
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      document.getElementById('genIndicator').style.display = 'none';
+      document.getElementById('aiSummaryContent').innerHTML = '<div style="padding:1rem;background:#fff3cd;border-radius:8px;border:1px solid #ffc107;font-size:0.84rem;color:#856404;">⚠️ API Key not found! Click the <strong>⚙ API Key</strong> button at the top to add your key.</div>';
+      return;
+    }
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.map(c => c.text || '').join('') || 'Unable to generate summary.';
+
+    document.getElementById('genIndicator').style.display = 'none';
+    renderAISummary(text);
+
+  } catch (err) {
+    document.getElementById('genIndicator').style.display = 'none';
+    // Fallback to pre-built summary
+    renderFallbackSummary(j);
+  }
+}
+
+function renderAISummary(text) {
+  const container = document.getElementById('aiSummaryContent');
+  
+  const lines = text.split('\n');
+  let html = '';
+  let inSection = false;
+  let inList = false;
+  let isPractitioner = false;
+  let practitionerContent = '';
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    // Heading: ## SECTION NAME or # Title or numbered 1. SECTION
+    const isHeading = /^#{1,3}\s+/.test(trimmed) || /^\d+\.\s+[A-Z][A-Z\s']+$/.test(trimmed);
+    
+    if (isHeading) {
+      // Close previous list/section
+      if (inList) { html += '</ul></div></div>'; inList = false; }
+      else if (inSection) { html += '</div></div>'; }
+      
+      const label = trimmed.replace(/^#{1,3}\s+/, '').replace(/^\d+\.\s+/, '').replace(/:$/, '');
+      isPractitioner = /PRACTITIONER/i.test(label);
+      inSection = true;
+      
+      if (isPractitioner) {
+        html += `<div class="summary-section"><div class="summary-section-label">${label}</div><div class="practitioner-box"><strong>⚖ Actionable Note for Practitioners</strong>`;
+      } else {
+        html += `<div class="summary-section"><div class="summary-section-label">${label}</div><div class="summary-content">`;
+      }
+      continue;
+    }
+
+    // List item
+    if (/^[-•*]\s+/.test(trimmed) || /^\d+\)\s+/.test(trimmed)) {
+      if (!inList) { html += '<ul class="summary-list">'; inList = true; }
+      const content = trimmed.replace(/^[-•*]\s+/, '').replace(/^\d+\)\s+/, '');
+      // Bold **text**
+      const formatted = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html += `<li>${formatted}</li>`;
+      continue;
+    }
+
+    // Close list if open
+    if (inList) { html += '</ul>'; inList = false; }
+
+    // Regular paragraph — remove ** bold markdown
+    const formatted = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html += `<p style="font-size:0.84rem;line-height:1.7;color:#ccc;margin-bottom:0.6rem;">${formatted}</p>`;
+  }
+
+  // Close any open tags
+  if (inList) html += '</ul>';
+  if (inSection) html += '</div></div>';
+
+  container.innerHTML = html || `<p style="font-size:0.84rem;line-height:1.7;color:#ccc;">${text}</p>`;
+}
+
+function renderFallbackSummary(j) {
+  const container = document.getElementById('aiSummaryContent');
+  container.innerHTML = `
+    <div class="summary-section">
+      <div class="summary-section-label">Background</div>
+      <div class="summary-content">${j.summary}</div>
+    </div>
+    <div class="summary-section">
+      <div class="summary-section-label">Core Issue</div>
+      <div class="summary-content">${j.issue}</div>
+    </div>
+    <div class="summary-section">
+      <div class="summary-section-label">Ratio Decidendi</div>
+      <div class="summary-content">${j.ratio}</div>
+    </div>
+    <div class="summary-section">
+      <div class="summary-section-label">Practitioner's Note</div>
+      <div class="practitioner-box"><strong>⚖ Action Required</strong>${j.takeaway}</div>
+    </div>
+  `;
+}
+
+function closePanel() {
+  document.getElementById('aiPanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// Handle PDF upload
+async function extractTextFromFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      reader.onload = async function(e) {
+        try {
+          const typedArray = new Uint8Array(e.target.result);
+          const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+          let fullText = '';
+          const maxPages = Math.min(pdf.numPages, 15); // first 15 pages kaafi hain
+          for (let i = 1; i <= maxPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            const pageText = content.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n';
+          }
+          resolve(fullText.trim());
+        } catch(err) {
+          reject(err);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      // Plain text file
+      reader.onload = function(e) { resolve(e.target.result); };
+      reader.readAsText(file);
+    }
+  });
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  event.target.value = '';
+
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('aiPanel').classList.add('open');
+
+  const body = document.getElementById('aiPanelBody');
+  body.innerHTML = `
+    <div style="margin-bottom:1rem;padding:1rem;background:#f8f5f0;border-radius:8px;border:1px solid var(--border);">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.3rem;">Uploaded Document</div>
+      <div style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;">${file.name}</div>
+    </div>
+    <div class="generating-indicator" id="genIndicator">
+      <div class="gen-spinner"></div>
+      <span class="gen-text">Extracting text from PDF...</span>
+    </div>
+    <div id="aiSummaryContent"></div>
+  `;
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    document.getElementById('genIndicator').style.display = 'none';
+    document.getElementById('aiSummaryContent').innerHTML = '<div style="padding:1rem;background:#fff3cd;border-radius:8px;font-size:0.84rem;color:#856404;">⚠️ API Key not set! Click the ⚙ API Key button at the top to add your key.</div>';
+    return;
+  }
+
+  extractTextFromFile(file).then(async (text) => {
+    if (!text || text.length < 100) {
+      document.getElementById('genIndicator').style.display = 'none';
+      document.getElementById('aiSummaryContent').innerHTML = '<div style="padding:1rem;background:#fff3cd;border-radius:8px;font-size:0.84rem;color:#856404;">⚠️ Could not extract text from PDF — this appears to be a scanned/image PDF. Please try a text-based PDF.</div>';
+      return;
+    }
+
+    document.getElementById('genIndicator').innerHTML = '<div class="gen-spinner"></div><span class="gen-text">Text extracted! Running AI analysis...</span>';
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1500,
+          messages: [{
+            role: 'user',
+            content: `You are a senior Indian tax advocate. Analyze this court judgement and provide:
+1. Extract these details (each on new line):
+TITLE: [short descriptive title]
+PARTIES: [Appellant vs Respondent]
+COURT: [Court name]
+DATE: [date if found, else today]
+TYPE: [GST or Income Tax or Customs or ITAT]
+SECTION: [main section involved]
+IMPACT: [HIGH or MEDIUM or LOW]
+
+Then provide full structured analysis:
+## BACKGROUND
+## CORE ISSUE
+## COURT'S REASONING
+## KEY HOLDINGS
+## IMPACT ON ASSESSEES
+## PRACTITIONER'S NOTE
+
+JUDGEMENT TEXT:
+${text.substring(0, 4000)}`
+          }]
+        })
+      });
+
+      const data = await response.json();
+      const aiText = data.content?.map(c => c.text || '').join('') || '';
+
+      const titleMatch = aiText.match(/TITLE:\s*(.+)/);
+      const partiesMatch = aiText.match(/PARTIES:\s*(.+)/);
+      const courtMatch = aiText.match(/COURT:\s*(.+)/);
+      const dateMatch = aiText.match(/DATE:\s*(.+)/);
+      const typeMatch = aiText.match(/TYPE:\s*(GST|Income Tax|Customs|ITAT)/);
+      const sectionMatch = aiText.match(/SECTION:\s*(.+)/);
+      const impactMatch = aiText.match(/IMPACT:\s*(HIGH|MEDIUM|LOW)/);
+
+      const judgementData = {
+        title: titleMatch ? titleMatch[1].trim() : file.name.replace(/\.(pdf|txt)$/i,''),
+        parties: partiesMatch ? partiesMatch[1].trim() : 'As per document',
+        court: courtMatch ? courtMatch[1].trim() : 'Uploaded',
+        date: dateMatch ? dateMatch[1].trim() : new Date().toLocaleDateString('en-IN'),
+        type: typeMatch ? typeMatch[1].trim() : 'Income Tax',
+        section: sectionMatch ? sectionMatch[1].trim() : '',
+        impact: impactMatch ? impactMatch[1].trim() : 'MEDIUM',
+        summary: text.substring(0, 300) + '...',
+        ai_summary: aiText
+      };
+
+      document.getElementById('genIndicator').innerHTML = '<div class="gen-spinner"></div><span class="gen-text">Summary ready — saving to database...</span>';
+
+      const saved = await saveJudgement(judgementData);
+      if (saved) {
+        SAVED_JUDGEMENTS.unshift({ ...judgementData, id: saved.id, isUserUploaded: true });
+        renderAllCards();
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#2e7d32;color:white;padding:0.8rem 1.5rem;border-radius:8px;font-size:0.82rem;z-index:9999;font-family:DM Sans,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+        toast.textContent = '✅ Judgement saved successfully to your dashboard!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+      }
+
+      document.getElementById('genIndicator').style.display = 'none';
+      renderAISummary(aiText);
+
+    } catch(err) {
+      document.getElementById('genIndicator').style.display = 'none';
+      document.getElementById('aiSummaryContent').innerHTML = '<div style="padding:1rem;background:#fee;border-radius:8px;font-size:0.84rem;color:#c0392b;">❌ Something went wrong — please check your API key and try again.</div>';
+    }
+  }).catch(() => {
+    document.getElementById('genIndicator').style.display = 'none';
+    document.getElementById('aiSummaryContent').innerHTML = '<div style="padding:1rem;background:#fee;border-radius:8px;font-size:0.84rem;color:#c0392b;">❌ Could not read PDF — please try a text-based PDF file.</div>';
+  });
+}
+
+// ─── SUPABASE CONFIG ───────────────────────────────────────────
+const SUPA_URL = 'https://wieixgsmjfigpzyfryea.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndpZWl4Z3NtamZpZ3B6eWZyeWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzE3OTcsImV4cCI6MjA4ODcwNzc5N30.m8WEN5v2Vyhd7ZVN2F8B3QE0KMuqSy8O0h6PH0KBtQE';
+
+const supaHeaders = {
+  'Content-Type': 'application/json',
+  'apikey': SUPA_KEY,
+  'Authorization': `Bearer ${SUPA_KEY}`
+};
+
+// Create table if not exists (run once via REST — will silently fail if exists)
+async function initSupabase() {
+  // Try to fetch existing judgements
+  await loadSavedJudgements();
+}
+
+async function saveJudgement(j) {
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/judgements`, {
+      method: 'POST',
+      headers: { ...supaHeaders, 'Prefer': 'return=representation' },
+      body: JSON.stringify({
+        title: j.title,
+        parties: j.parties,
+        court: j.court,
+        date: j.date,
+        type: j.type,
+        impact: j.impact,
+        section: j.section,
+        summary: j.summary,
+        ai_summary: j.ai_summary || ''
+      })
+    });
+    if (res.ok) {
+      const saved = await res.json();
+      return saved[0];
+    }
+  } catch(e) {
+    console.log('Save error:', e);
+  }
+  return null;
+}
+
+async function deleteJudgement(id) {
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/judgements?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: supaHeaders
+    });
+    // Remove from feed
+    SAVED_JUDGEMENTS = SAVED_JUDGEMENTS.filter(j => j.id !== id);
+    renderAllCards();
+  } catch(e) {
+    console.log('Delete error:', e);
+  }
+}
+
+let SAVED_JUDGEMENTS = [];
+
+async function loadSavedJudgements() {
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/judgements?order=created_at.desc`, {
+      headers: supaHeaders
+    });
+    if (res.ok) {
+      const data = await res.json();
+      // Auto-categorize if type is missing
+      SAVED_JUDGEMENTS = data.map(j => {
+        if (!j.type || j.type === 'Income Tax') {
+          const titleLower = (j.title || '').toLowerCase();
+          const summaryLower = (j.summary || '').toLowerCase();
+          const text = titleLower + ' ' + summaryLower;
+          if (text.includes('gst') || text.includes('igst') || text.includes('cgst') || text.includes('sgst') || text.includes('input tax credit') || text.includes('itc') || text.includes('e-way') || text.includes('eway') || text.includes('refund') && text.includes('gst')) {
+            j.type = 'GST';
+          } else if (text.includes('customs') || text.includes('excise') || text.includes('depb') || text.includes('import') || text.includes('export duty')) {
+            j.type = 'Customs';
+          } else if (text.includes('itat') || text.includes('income tax appellate')) {
+            j.type = 'ITAT';
+          } else {
+            j.type = 'Income Tax';
+          }
+        }
+        return j;
+      });
+      renderAllCards();
+    }
+  } catch(e) {
+    console.log('Load error:', e);
+  }
+}
+
+// renderAllCards defined below after search function
+
+function openSummaryCard(j) {
+  const summaryContent = j.ai_summary || j.summary || '';
+  const hasSummary = summaryContent && summaryContent.length > 50;
+
+  // Check paywall ONLY for fresh generation (no pre-saved summary)
+  if (!hasSummary) {
+    const used = getUsage();
+    if (used >= FREE_LIMIT) {
+      showPaywall();
+      return;
+    }
+    incrementUsage();
+  }
+
+  // If it has saved AI summary, show directly
+  if (hasSummary) {
+    j.ai_summary = summaryContent;
+    document.getElementById('overlay').classList.add('show');
+    document.getElementById('aiPanel').classList.add('open');
+    const body = document.getElementById('aiPanelBody');
+    body.innerHTML = `
+      <div style="margin-bottom:1rem;">
+        <div class="card-meta" style="margin-bottom:0.5rem;">
+          <span class="tag tag-${j.type === 'Income Tax' ? 'IT' : j.type}">${j.type}</span>
+          <span class="tag tag-HC">${j.court || 'Court'}</span>
+          <span class="impact-badge impact-${j.impact || 'MEDIUM'}" style="margin-left:auto;">${j.impact || 'MEDIUM'} IMPACT</span>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;line-height:1.4;margin-bottom:0.3rem;">${j.title}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);">${j.parties || ''}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--gold);margin-top:0.3rem;">${j.section || ''} · ${j.date || ''}</div>
+      </div>
+      <div id="aiSummaryContent"></div>
+    `;
+    renderAISummary(j.ai_summary);
+    return;
+  }
+  // Otherwise generate fresh
+  if (j.id && !j.isUserUploaded) {
+    openSummary(j.id);
+  } else {
+    openSummary(j.id || 1);
+  }
+}
+
+let currentFilter = 'all';
+
+// API Key management
+function openApiModal() {
+  const modal = document.getElementById('apiModal');
+  modal.style.display = 'flex';
+  const stored = localStorage.getItem('nyayiq_api_key');
+  if (stored) document.getElementById('apiKeyInput').value = stored;
+}
+function closeApiModal() {
+  document.getElementById('apiModal').style.display = 'none';
+}
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-ant-')) {
+    alert('Invalid API key — it should start with "sk-ant-"');
+    return;
+  }
+  localStorage.setItem('nyayiq_api_key', key);
+  closeApiModal();
+  const btn = document.getElementById('apiBtn');
+  btn.style.color = '#4ade80';
+  btn.textContent = '⚙ API ✓';
+  alert('API Key saved! The AI Summary button is now active. ✅');
+}
+function getApiKey() {
+  return localStorage.getItem('nyayiq_api_key') || '';
+}
+
+// Filter
+function filterCards(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = type;
+  renderAllCards(type);
+}
+
+// Set date
+document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-IN', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
+
+// Check if key already saved
+window.addEventListener('load', () => {
+  const stored = localStorage.getItem('nyayiq_api_key');
+  if (stored) {
+    const btn = document.getElementById('apiBtn');
+    btn.style.color = '#4ade80';
+    btn.textContent = '⚙ API ✓';
+  }
+});
+
+// Init
+renderCards();
+renderTrending();
+initSupabase();
+updateUsageUI(); // Load saved judgements from Supabase
+
+// ─── SEARCH FUNCTION ────────────────────────────────────────────
+let searchQuery = '';
+function searchJudgements(query) {
+  searchQuery = query.toLowerCase().trim();
+  renderAllCards(currentFilter);
+}
+
+// Override renderAllCards to support search
+function renderAllCards(filter) {
+  filter = filter || currentFilter;
+  const feed = document.getElementById('judgementFeed');
+  const allSaved = SAVED_JUDGEMENTS.map(j => ({ ...j, isUserUploaded: true }));
+  let allCards = [...allSaved];
+
+  // Search filter
+  if (searchQuery) {
+    allCards = allCards.filter(j => {
+      const text = ((j.title||'') + ' ' + (j.summary||'') + ' ' + (j.parties||'') + ' ' + (j.section||'') + ' ' + (j.court||'')).toLowerCase();
+      return text.includes(searchQuery);
+    });
+  }
+
+  // Type filter
+  const filtered = filter === 'all' ? allCards : allCards.filter(j => j.type === filter);
+
+  // Update counts
+  const total = allCards.length;
+  const today = allCards.filter(j => {
+    const d = new Date(j.created_at || j.date);
+    return d.toDateString() === new Date().toDateString();
+  }).length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-today').textContent = today;
+  document.getElementById('stat-high').textContent = allCards.filter(j => j.impact === 'HIGH').length;
+  document.getElementById('stat-gst').textContent = allCards.filter(j => j.type === 'GST').length;
+  document.getElementById('count-all').textContent = allCards.length;
+  document.getElementById('count-GST').textContent = allCards.filter(j => j.type === 'GST').length;
+  document.getElementById('count-IT').textContent = allCards.filter(j => j.type === 'Income Tax').length;
+  document.getElementById('count-Customs').textContent = allCards.filter(j => j.type === 'Customs').length;
+  document.getElementById('count-ITAT').textContent = allCards.filter(j => j.type === 'ITAT').length;
+
+  if (filtered.length === 0) {
+    feed.innerHTML = `<div style="text-align:center;padding:3rem;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:#444;">${searchQuery ? 'No results for "' + searchQuery + '"' : 'No judgements yet. Check back soon!'}</div>`;
+    return;
+  }
+
+  feed.innerHTML = filtered.map(j => `
+    <div class="judgement-card" data-type="${j.type}" data-id="${j.id}" onclick="openSummaryCard(${JSON.stringify(j).replace(/"/g, '&quot;')})">
+      <div class="card-meta">
+        <span class="tag tag-${j.type === 'Income Tax' ? 'IT' : (j.type || 'GST')}">${j.type || 'Tax'}</span>
+        <span class="tag tag-HC">${j.court || 'Court'}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:#888;">${j.section || ''}</span>
+        <span class="card-date">${j.date || ''}</span>
+      </div>
+      <div class="card-title">${j.title}</div>
+      <div class="card-parties">${j.parties || ''}</div>
+      <div class="card-summary">${(j.summary || '').substring(0, 200)}${(j.summary||'').length > 200 ? '...' : ''}</div>
+      <div class="card-footer">
+        <div class="card-action-btns">
+          <button class="btn-sm btn-outline" onclick="event.stopPropagation(); if(confirm('Remove this judgement?')) deleteJudgement(${j.id})" style="color:#c0392b;border-color:#c0392b;">🗑 Remove</button>
+          <button class="btn-sm btn-primary" onclick="event.stopPropagation(); openSummaryCard(${JSON.stringify(j).replace(/"/g, '&quot;')})">AI Summary →</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Update trending dynamically from actual data
+  updateTrending(allCards);
+}
+
+// Dynamic trending from real data
+function updateTrending(cards) {
+  if (cards.length === 0) return;
+  const recent = cards.slice(0, 5);
+  document.getElementById('trendingList').innerHTML = recent.map((t, i) => `
+    <div class="trending-item" onclick="openSummaryCard(${JSON.stringify(t).replace(/"/g, '&quot;')})" style="cursor:pointer;">
+      <span class="trending-num">0${i+1}</span>
+      <div class="trending-text">
+        <div style="font-size:0.82rem;color:var(--paper);line-height:1.3;">${(t.title||'').substring(0,55)}${(t.title||'').length>55?'...':''}</div>
+        <div class="trending-court">${t.court || t.type || 'Tax Court'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── NEWSLETTER MODAL ───────────────────────────────────────────
+function openNewsletterModal() {
+  window.open('https://6b2e0123.sibforms.com/serve/MUIFAAWF8vwWqBmw3cJK5wM66W10qzFRj2fEJDyV6XEC1JbdunaatrUVCIVH4Kb3PF6M8euyL_0tn_Brq9s3U92BCtM6UN1HinGVKugMYMv8w757phdcGAS96N7OeUON2thflZeyfiVRiMC5Pb0oryyjt79hlKS7NhNFWktE8UARw5CSIDK78bDZjjXdMGar4WjD8rL2n-q-X6wNug==', '_blank');
+}
+function closeNewsletterModal() {
+  document.getElementById('newsletterModal').style.display = 'none';
+}
+async function subscribeNewsletter() {
+  const email = document.getElementById('newsletterEmail').value.trim();
+  if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+
+  const btn = document.querySelector('#newsletterModal button');
+  const originalText = btn.textContent;
+  btn.textContent = 'Subscribing...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': 'xkeysib-77a03ad2fe6d98f323d1ef9218d1315aee8b6861f8d'
+      },
+      body: JSON.stringify({ email: email, listIds: [2], updateEnabled: true })
+    });
+
+    const msgEl = document.getElementById('newsletterMsg');
+    if (res.ok || res.status === 204) {
+      msgEl.textContent = '✓ Subscribed! First digest coming tomorrow morning.';
+      msgEl.style.color = '#4ade80';
+    } else {
+      const data = await res.json().catch(() => ({}));
+      if (data.code === 'duplicate_parameter') {
+        msgEl.textContent = '✓ You are already subscribed!';
+        msgEl.style.color = '#4ade80';
+      } else {
+        msgEl.textContent = 'Something went wrong. Please try again!';
+        msgEl.style.color = '#f87171';
+      }
+    }
+    msgEl.style.display = 'block';
+    document.getElementById('newsletterEmail').value = '';
+    btn.textContent = '✓ Done!';
+    setTimeout(closeNewsletterModal, 2500);
+  } catch(e) {
+    alert('Network error. Please try again!');
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+</script>
+
+<!-- NEWSLETTER MODAL -->
+<div id="newsletterModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#111;border:1px solid #333;border-top:3px solid var(--gold);padding:2.5rem;width:460px;max-width:90vw;position:relative;">
+    <button onclick="closeNewsletterModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#666;font-size:1.3rem;cursor:pointer;">✕</button>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.75rem;">Daily Digest</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:0.75rem;">Get Daily Tax Judgements<br>in Your Inbox</div>
+    <div style="font-size:0.85rem;color:#888;margin-bottom:1.5rem;line-height:1.6;">Top 5 GST & Income Tax judgements every morning. Free. No spam.</div>
+    <input type="email" id="newsletterEmail" placeholder="your@email.com" style="width:100%;background:#1a1a1a;border:1px solid #333;color:var(--paper);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.75rem;outline:none;margin-bottom:0.75rem;">
+    <button onclick="subscribeNewsletter()" style="width:100%;background:var(--gold);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:0.75rem;font-weight:600;padding:0.85rem;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;">Subscribe Free →</button>
+    <div id="newsletterMsg" style="display:none;text-align:center;padding:0.75rem;color:#4ade80;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;margin-top:0.75rem;">✓ Subscribed! First digest coming tomorrow morning.</div>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer style="background:#0a0a0a;border-top:1px solid #222;padding:2rem 1.5rem;margin-top:2rem;font-family:'IBM Plex Mono',monospace;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:#c9a84c;font-weight:700;margin-bottom:0.5rem;">⚖️ NyayIQ</div>
+        <div style="font-size:0.72rem;color:#666;max-width:260px;line-height:1.6;">India's AI-powered tax judgement intelligence platform. For legal professionals and tax practitioners.</div>
+      </div>
+      <div>
+        <div style="font-size:0.72rem;color:#c9a84c;font-weight:600;margin-bottom:0.75rem;letter-spacing:0.1em;">PLATFORM</div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <a href="index.html" style="font-size:0.72rem;color:#888;text-decoration:none;">Dashboard</a>
+          <a href="articles.html" style="font-size:0.72rem;color:#888;text-decoration:none;">Articles</a>
+          <a href="contact.html" style="font-size:0.72rem;color:#888;text-decoration:none;">Contact Us</a>
+          <a href="home.html" style="font-size:0.72rem;color:#888;text-decoration:none;">Home</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.72rem;color:#c9a84c;font-weight:600;margin-bottom:0.75rem;letter-spacing:0.1em;">LEGAL</div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <a href="#privacy" style="font-size:0.72rem;color:#888;text-decoration:none;">Privacy Policy</a>
+          <a href="#terms" style="font-size:0.72rem;color:#888;text-decoration:none;">Terms of Use</a>
+          <a href="#disclaimer" style="font-size:0.72rem;color:#888;text-decoration:none;">Disclaimer</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.72rem;color:#c9a84c;font-weight:600;margin-bottom:0.75rem;letter-spacing:0.1em;">CONTACT</div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <a href="/cdn-cgi/l/email-protection#e5868a8b91848691a58b9c849c8c94cb8c8b" style="font-size:0.72rem;color:#888;text-decoration:none;"><span class="__cf_email__" data-cfemail="a4c7cbcad0c5c7d0e4caddc5ddcdd58acdca">[email&#160;protected]</span></a>
+          <a href="https://mjlexlegal.com" target="_blank" style="font-size:0.72rem;color:#888;text-decoration:none;">MJ Lex Legal Chambers</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid #1a1a1a;padding-top:1rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.5rem;">
+      <div style="font-size:0.65rem;color:#444;">© 2026 NyayIQ. All rights reserved. Built by MJ Lex Legal Chambers LLP.</div>
+      <div style="font-size:0

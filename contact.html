@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — NyayIQ Tax Intelligence</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0d0d0d; --paper:#f5f0e8; --gold:#c9a84c; --gold-light:#e8d5a3; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--ink); color:var(--paper); font-family:'DM Sans',sans-serif; min-height:100vh; }
+
+  header { background:var(--ink); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
+  .logo-text { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
+  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#888; text-transform:uppercase; letter-spacing:2px; }
+  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--gold); }
+  nav a.active { border-bottom:1px solid var(--gold); }
+
+  .page-header { padding:4rem 2rem 3rem; text-align:center; border-bottom:1px solid #1a1a1a; }
+  .page-header .label { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:1rem; }
+  .page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3.5rem); font-weight:900; }
+  .page-header h1 em { color:var(--gold); font-style:italic; }
+  .page-header p { color:#777; margin-top:1rem; }
+
+  .main { max-width:1000px; margin:0 auto; padding:4rem 2rem; display:grid; grid-template-columns:1fr 1.5fr; gap:4rem; }
+  @media(max-width:700px){ .main { grid-template-columns:1fr; gap:2rem; } }
+
+  /* INFO SIDE */
+  .info-section h2 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; margin-bottom:1.5rem; }
+  .contact-item { display:flex; gap:1rem; margin-bottom:1.5rem; align-items:flex-start; }
+  .contact-icon { font-size:1.2rem; margin-top:0.1rem; }
+  .contact-label { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.3rem; }
+  .contact-value { font-size:0.9rem; color:#aaa; line-height:1.5; }
+  .contact-value a { color:#aaa; text-decoration:none; }
+  .contact-value a:hover { color:var(--gold); }
+
+  .divider { border:none; border-top:1px solid #1a1a1a; margin:2rem 0; }
+
+  .entity-card { background:#111; border:1px solid #1e1e1e; padding:1.5rem; margin-bottom:1rem; }
+  .entity-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--gold); margin-bottom:0.3rem; }
+  .entity-desc { font-size:0.82rem; color:#666; line-height:1.5; }
+
+  /* FORM SIDE */
+  .form-section h2 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; margin-bottom:1.5rem; }
+  .form-group { margin-bottom:1.25rem; }
+  .form-group label { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:#777; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:0.4rem; }
+  .form-group input, .form-group select, .form-group textarea {
+    width:100%; background:#111; border:1px solid #1e1e1e; color:var(--paper);
+    font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:0.75rem;
+    outline:none; transition:border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--gold); }
+  .form-group textarea { min-height:140px; resize:vertical; }
+  .form-group select option { background:#111; }
+  .btn-gold { background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; font-weight:600; padding:0.85rem 2rem; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; width:100%; }
+  .btn-gold:hover { background:var(--gold-light); }
+  .success-msg { text-align:center; padding:1.5rem; background:#0a1a0a; border:1px solid #1a3a1a; color:#4ade80; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; display:none; margin-top:1rem; }
+
+  footer { background:#050505; border-top:1px solid #1a1a1a; padding:2rem; font-family:'IBM Plex Mono',monospace; margin-top:2rem; }
+  .footer-bottom { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem; }
+  .footer-bottom span { font-size:0.65rem; color:#333; }
+  footer a { font-size:0.65rem; color:#444; text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:baseline;gap:0.5rem;">
+    <a href="home.html" style="text-decoration:none;display:flex;align-items:baseline;gap:0.5rem;">
+      <span class="logo-text">NyayIQ</span>
+      <span class="logo-sub">Tax Intelligence</span>
+    </a>
+  </div>
+  <nav style="display:flex;gap:1.5rem;align-items:center;">
+    <a href="home.html">Home</a>
+    <a href="index.html">Dashboard</a>
+    <a href="articles.html">Articles</a>
+    <a href="about.html">About</a>
+    <a href="drafts.html">Drafts</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="contact.html" class="active">Contact</a>
+  </nav>
+  <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.5rem 1.2rem;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Dashboard →</a>
+</header>
+
+<div class="page-header">
+  <div class="label">Get in Touch</div>
+  <h1>Contact <em>NyayIQ</em></h1>
+  <p>Questions, feedback, or partnership enquiries — we'd love to hear from you.</p>
+</div>
+
+<div class="main">
+
+  <!-- INFO -->
+  <div class="info-section">
+    <h2>Contact Information</h2>
+
+    <div class="contact-item">
+      <div class="contact-icon">✉️</div>
+      <div>
+        <div class="contact-label">Email</div>
+        <div class="contact-value"><a href="/cdn-cgi/l/email-protection#365559584257554276584f574f5f47185f58"><span class="__cf_email__" data-cfemail="71121e1f05101205311f08100818005f181f">[email&#160;protected]</span></a></div>
+      </div>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-icon">🏛️</div>
+      <div>
+        <div class="contact-label">Office</div>
+        <div class="contact-value">G-66B, Roshanara Plaza Complex<br>Roshanara Road, Delhi — 110007</div>
+      </div>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-icon">⚖️</div>
+      <div>
+        <div class="contact-label">Practice Forums</div>
+        <div class="contact-value">Delhi High Court · ITAT · CIT(A)<br>GST Appellate Authority · NCLT</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="entity-card">
+      <div class="entity-name">MJ Lex Legal Chambers LLP</div>
+      <div class="entity-desc">GST & Income Tax litigation specialists. Appellate practice before Delhi HC, ITAT, CIT(A), and GST Appellate Authority.</div>
+    </div>
+
+    <div class="entity-card">
+      <div class="entity-name">AdvoFin Consulting Pvt Ltd</div>
+      <div class="entity-desc">Accounting, bookkeeping, and compliance services for startups and SMEs. GST registration, returns, and advisory.</div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-section">
+    <h2>Send a Message</h2>
+    <div class="form-group">
+      <label>Your Name *</label>
+      <input type="text" id="contactName" placeholder="Full name" />
+    </div>
+    <div class="form-group">
+      <label>Email Address *</label>
+      <input type="email" id="contactEmail" placeholder="your@email.com" />
+    </div>
+    <div class="form-group">
+      <label>Subject</label>
+      <select id="contactSubject">
+        <option value="General Enquiry">General Enquiry</option>
+        <option value="GST Consultation">GST Consultation</option>
+        <option value="Income Tax Matter">Income Tax Matter</option>
+        <option value="Platform Feedback">Platform Feedback</option>
+        <option value="Partnership / Collaboration">Partnership / Collaboration</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Message *</label>
+      <textarea id="contactMessage" placeholder="Describe your query or message..."></textarea>
+    </div>
+    <button class="btn-gold" onclick="submitContact()">Send Message</button>
+    <div class="success-msg" id="successMsg">
+      ✓ Message received! We'll get back to you within 24 hours.
+    </div>
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:#444;margin-top:1rem;line-height:1.6;">
+      ⚠️ This platform is for informational purposes only. For formal legal consultation, please contact MJ Lex Legal Chambers directly at <a href="/cdn-cgi/l/email-protection#a5c6cacbd1c4c6d1e5c8cfc9c0ddc9c0c2c4c98bc6cac8" style="color:#666;"><span class="__cf_email__" data-cfemail="f1929e9f85909285b19c9b9d94899d9496909ddf929e9c">[email&#160;protected]</span></a>
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 NyayIQ · <a href="home.html">Home</a> · <a href="articles.html">Articles</a> · <a href="#">Privacy</a></span>
+    <span>⚠️ For informational purposes only. Not legal advice.</span>
+  </div>
+</footer>
+
+<script>
+async function submitContact() {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+  const subject = document.getElementById('contactSubject').value;
+  if (!name || !email || !message) { alert('Please fill in all required fields.'); return; }
+
+  const btn = document.querySelector('.btn-gold');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://formspree.io/f/xvzwbqdd', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name, email, subject, message })
+    });
+    if (res.ok) {
+      document.getElementById('successMsg').style.display = 'block';
+      ['contactName','contactEmail','contactMessage'].forEach(id => document.getElementById(id).value = '');
+      btn.textContent = '✓ Sent!';
+      setTimeout(() => {
+        document.getElementById('successMsg').style.display = 'none';
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+      }, 5000);
+    } else {
+      alert('Something went wrong. Please email us at contact@nyayiq.in');
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    alert('Network error. Please email us at contact@nyayiq.in');
+    btn.textContent = 'Send Message';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

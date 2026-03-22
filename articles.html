@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Articles — NyayIQ Tax Intelligence</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0d0d0d; --paper:#f5f0e8; --gold:#c9a84c; --gold-light:#e8d5a3; --muted:#666; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--ink); color:var(--paper); font-family:'DM Sans',sans-serif; }
+
+  header { background:var(--ink); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
+  .logo-text { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
+  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#888; text-transform:uppercase; letter-spacing:2px; }
+  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--gold); }
+  nav a.active { border-bottom:1px solid var(--gold); }
+
+  .page-header { padding:4rem 2rem 3rem; text-align:center; border-bottom:1px solid #1a1a1a; }
+  .page-header .label { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:1rem; }
+  .page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3.5rem); font-weight:900; }
+  .page-header h1 em { color:var(--gold); font-style:italic; }
+  .page-header p { color:#777; margin-top:1rem; max-width:500px; margin-left:auto; margin-right:auto; }
+
+  .main { max-width:1100px; margin:0 auto; padding:3rem 2rem; }
+
+  /* CATEGORIES */
+  .cat-filter { display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:3rem; }
+  .cat-btn { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; padding:0.4rem 1rem; border:1px solid #222; color:#777; background:transparent; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; }
+  .cat-btn:hover, .cat-btn.active { border-color:var(--gold); color:var(--gold); }
+
+  /* ARTICLES GRID */
+  .articles-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1.5rem; }
+  .article-card { background:#111; border:1px solid #1e1e1e; padding:1.75rem; cursor:pointer; transition:all 0.2s; }
+  .article-card:hover { border-color:rgba(201,168,76,0.3); transform:translateY(-2px); }
+  .article-tag { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.75rem; }
+  .article-title { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; margin-bottom:0.75rem; line-height:1.4; }
+  .article-excerpt { font-size:0.85rem; color:#777; line-height:1.6; margin-bottom:1rem; }
+  .article-meta { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:#444; display:flex; gap:1rem; }
+
+  /* ARTICLE MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:500; overflow-y:auto; }
+  .modal-overlay.show { display:block; }
+  .modal { max-width:760px; margin:3rem auto; background:#0f0f0f; border:1px solid #222; padding:3rem; position:relative; }
+  .modal-close { position:absolute; top:1.5rem; right:1.5rem; background:none; border:none; color:#666; font-size:1.5rem; cursor:pointer; }
+  .modal-close:hover { color:var(--gold); }
+  .modal-tag { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem; }
+  .modal-title { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3vw,2.2rem); font-weight:900; margin-bottom:1rem; line-height:1.3; }
+  .modal-meta { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#555; margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid #1a1a1a; }
+  .modal-body { font-size:0.95rem; line-height:1.8; color:#ccc; }
+  .modal-body p { margin-bottom:1.2rem; }
+  .modal-body h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--paper); margin:1.5rem 0 0.75rem; }
+
+  /* ADMIN PANEL */
+  .admin-toggle { text-align:center; margin:3rem 0 1rem; }
+  .admin-toggle button { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:#333; background:none; border:1px solid #1a1a1a; padding:0.4rem 1rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; }
+  .admin-toggle button:hover { color:#555; border-color:#333; }
+
+  .admin-panel { background:#080808; border:1px solid #1a1a1a; padding:2rem; margin-bottom:3rem; display:none; }
+  .admin-panel.show { display:block; }
+  .admin-panel h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--gold); margin-bottom:1.5rem; }
+  .form-group { margin-bottom:1.25rem; }
+  .form-group label { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#777; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:0.4rem; }
+  .form-group input, .form-group select, .form-group textarea {
+    width:100%; background:#111; border:1px solid #222; color:var(--paper);
+    font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:0.75rem;
+    outline:none; transition:border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--gold); }
+  .form-group textarea { min-height:200px; resize:vertical; }
+  .form-group select option { background:#111; }
+  .admin-pw { display:flex; gap:0.5rem; margin-bottom:1.5rem; }
+  .admin-pw input { flex:1; }
+  .btn-gold { background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; font-weight:600; padding:0.75rem 1.5rem; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; }
+  .btn-gold:hover { background:var(--gold-light); }
+
+  /* EMPTY STATE */
+  .empty { text-align:center; padding:4rem; color:#444; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; }
+
+  /* FOOTER */
+  footer { background:#050505; border-top:1px solid #1a1a1a; padding:2.5rem 2rem; font-family:'IBM Plex Mono',monospace; margin-top:4rem; }
+  .footer-bottom { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem; }
+  .footer-bottom span { font-size:0.65rem; color:#333; }
+  footer a { font-size:0.65rem; color:#444; text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:baseline;gap:0.5rem;">
+    <a href="home.html" style="text-decoration:none;display:flex;align-items:baseline;gap:0.5rem;">
+      <span class="logo-text">NyayIQ</span>
+      <span class="logo-sub">Tax Intelligence</span>
+    </a>
+  </div>
+  <nav style="display:flex;gap:1.5rem;align-items:center;">
+    <a href="home.html">Home</a>
+    <a href="index.html">Dashboard</a>
+    <a href="articles.html" class="active">Articles</a>
+    <a href="about.html">About</a>
+    <a href="drafts.html">Drafts</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.5rem 1.2rem;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Dashboard →</a>
+</header>
+
+<div class="page-header">
+  <div class="label">Knowledge Base</div>
+  <h1>Tax Law <em>Articles</em></h1>
+  <p>In-depth analysis of GST, Income Tax and appellate matters by experienced tax practitioners.</p>
+</div>
+
+<div class="main">
+
+  <!-- CATEGORY FILTER -->
+  <div class="cat-filter">
+    <button class="cat-btn active" onclick="filterArticles('all', this)">All</button>
+    <button class="cat-btn" onclick="filterArticles('GST', this)">GST</button>
+    <button class="cat-btn" onclick="filterArticles('Income Tax', this)">Income Tax</button>
+    <button class="cat-btn" onclick="filterArticles('Customs', this)">Customs</button>
+    <button class="cat-btn" onclick="filterArticles('ITAT', this)">ITAT</button>
+    <button class="cat-btn" onclick="filterArticles('Appeals', this)">Appeals</button>
+  </div>
+
+  <!-- ARTICLES GRID -->
+  <div class="articles-grid" id="articlesGrid"></div>
+  <div class="empty" id="emptyState" style="display:none;">No articles yet. Check back soon!</div>
+
+  <!-- ADMIN TOGGLE -->
+  <div class="admin-toggle">
+    <button onclick="toggleAdmin()">⚙ Admin</button>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="adminPanel">
+    <h3>Post New Article</h3>
+    <div class="admin-pw" id="pwSection">
+      <input type="password" id="adminPw" placeholder="Enter admin password..." />
+      <button class="btn-gold" onclick="checkPassword()">Unlock</button>
+    </div>
+    <div id="articleForm" style="display:none;">
+      <div class="form-group">
+        <label>Article Title *</label>
+        <input type="text" id="artTitle" placeholder="e.g. GST Refund on Export: Key HC Ruling Explained" />
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="artCategory">
+          <option value="GST">GST</option>
+          <option value="Income Tax">Income Tax</option>
+          <option value="Customs">Customs</option>
+          <option value="ITAT">ITAT</option>
+          <option value="Appeals">Appeals</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" id="artAuthor" value="Adv. Mohit Jain" />
+      </div>
+      <div class="form-group">
+        <label>Short Excerpt (shown in card)</label>
+        <input type="text" id="artExcerpt" placeholder="2-3 line summary of the article..." />
+      </div>
+      <div class="form-group">
+        <label>Full Article Content *</label>
+        <textarea id="artContent" placeholder="Write full article here. Use blank lines to separate paragraphs. Use ### for headings."></textarea>
+      </div>
+      <button class="btn-gold" onclick="publishArticle()">Publish Article</button>
+      <span id="publishMsg" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#4ade80;margin-left:1rem;"></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ARTICLE MODAL -->
+<div class="modal-overlay" id="articleModal" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="document.getElementById('articleModal').classList.remove('show')">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 NyayIQ · <a href="home.html">Home</a> · <a href="contact.html">Contact</a> · <a href="#">Privacy</a></span>
+    <span>⚠️ For informational purposes only. Not legal advice.</span>
+  </div>
+</footer>
+
+<script>
+const ADMIN_PASSWORD = 'nyayiq2026';
+const STORAGE_KEY = 'nyayiq_articles';
+
+// Default articles
+const DEFAULT_ARTICLES = [
+  {
+    id: 1,
+    title: "GST Refund on Export of Services: Common Pitfalls and How to Avoid Them",
+    category: "GST",
+    author: "Adv. Mohit Jain",
+    date: "March 10, 2026",
+    excerpt: "Exporters often face unnecessary refund rejections due to procedural lapses. This article covers the key requirements under Rule 89 and recent HC rulings.",
+    content: `### Overview\nGST refund on export of services is one of the most litigated areas in indirect tax practice. Despite clear statutory provisions, exporters routinely face rejections on technical grounds.\n\n### Key Requirements Under Rule 89\nTo claim a refund under Rule 89(4) for zero-rated supply without payment of integrated tax, the applicant must satisfy conditions relating to the statement of invoices, bank realization certificate (FIRC/BRC), and a declaration that services were actually exported.\n\n### Common Grounds for Rejection\nAuthorities frequently reject claims citing mismatch in GSTR-1 vs GSTR-3B, delay in BRC submission, or non-filing of Form RFD-01 within the limitation period. Recent High Court rulings have consistently held that procedural technicalities cannot override substantive entitlement.\n\n### Key Judgements\nThe Bombay High Court in Colgate-Palmolive vs UOI held that minor procedural defects in refund applications cannot be a ground for outright rejection without giving opportunity to rectify. The Delhi HC has similarly held in multiple cases that the limitation for refund under Section 54 runs from the date of export invoice, not from the date of filing GSTR-3B.\n\n### Practitioner's Note\nAlways ensure your client files RFD-01 within 2 years of the relevant date. Keep FIRC/BRC documentation ready. If rejected, challenge on grounds of natural justice — non-supply of SCN or opportunity to respond is a strong ground before the Appellate Authority.`
+  },
+  {
+    id: 2,
+    title: "Section 148A Assessment: HC Trends on Reassessment Notices Post-2021 Amendment",
+    category: "Income Tax",
+    author: "Adv. Mohit Jain",
+    date: "March 8, 2026",
+    excerpt: "The Finance Act 2021 overhauled reassessment proceedings under the Income Tax Act. This piece examines how High Courts have interpreted the new regime.",
+    content: `### Background\nThe Finance Act 2021 substituted Sections 147-151 with a completely new reassessment framework effective from April 1, 2021. The new regime introduced Section 148A which requires the AO to conduct a preliminary enquiry and give the assessee an opportunity to be heard before issuing notice under Section 148.\n\n### The Section 148A Procedure\nUnder Section 148A, the AO must: (a) conduct an enquiry with prior approval of the specified authority; (b) provide the assessee with information or material on the basis of which the case was selected; (c) give the assessee 7 days (extendable to 30 days) to respond; and (d) pass an order determining whether it is a fit case for issue of notice under Section 148.\n\n### High Court Interpretation\nHigh Courts across India have consistently held that the procedure under Section 148A is mandatory and not directory. Where the AO has issued Section 148 notice without following Section 148A procedure, courts have quashed such notices. The Supreme Court in Union of India vs Ashish Agarwal clarified the position regarding notices issued during the transitional period.\n\n### Critical Limitation Issue\nFor cases beyond 3 years, the new regime requires the income escaping assessment to exceed Rs. 50 lakh. Several High Courts have held that this is a jurisdictional requirement — AOs cannot issue notices for small amounts beyond the 3-year window.\n\n### Practitioner's Note\nChallenge any Section 148 notice where Section 148A procedure was not followed. Specifically examine: (1) Was prior approval obtained? (2) Was material disclosed to assessee? (3) Was 7-day minimum opportunity given? (4) Was an order under 148A(d) passed? Absence of any of these is a valid ground for writ.`
+  }
+];
+
+let articles = [];
+let currentFilter = 'all';
+
+function loadArticles() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    articles = stored ? JSON.parse(stored) : DEFAULT_ARTICLES;
+  } catch(e) {
+    articles = DEFAULT_ARTICLES;
+  }
+  renderArticles();
+}
+
+function saveArticles() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
+}
+
+function renderArticles() {
+  const grid = document.getElementById('articlesGrid');
+  const empty = document.getElementById('emptyState');
+  const filtered = currentFilter === 'all' ? articles : articles.filter(a => a.category === currentFilter);
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.innerHTML = filtered.map(a => `
+    <div class="article-card" onclick="openArticle(${a.id})">
+      <div class="article-tag">${a.category}</div>
+      <div class="article-title">${a.title}</div>
+      <div class="article-excerpt">${a.excerpt || ''}</div>
+      <div class="article-meta">
+        <span>${a.author || 'NyayIQ'}</span>
+        <span>${a.date || ''}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterArticles(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderArticles();
+}
+
+function openArticle(id) {
+  const a = articles.find(x => x.id === id);
+  if (!a) return;
+  const bodyHtml = (a.content || '').split('\n').map(line => {
+    if (line.startsWith('###')) return `<h3>${line.replace('###','').trim()}</h3>`;
+    if (line.trim() === '') return '';
+    return `<p>${line}</p>`;
+  }).join('');
+  
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-tag">${a.category}</div>
+    <div class="modal-title">${a.title}</div>
+    <div class="modal-meta">${a.author || 'NyayIQ'} · ${a.date || ''}</div>
+    <div class="modal-body">${bodyHtml}</div>
+  `;
+  document.getElementById('articleModal').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('articleModal')) {
+    document.getElementById('articleModal').classList.remove('show');
+  }
+}
+
+function toggleAdmin() {
+  document.getElementById('adminPanel').classList.toggle('show');
+}
+
+function checkPassword() {
+  const pw = document.getElementById('adminPw').value;
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById('pwSection').style.display = 'none';
+    document.getElementById('articleForm').style.display = 'block';
+  } else {
+    alert('Wrong password!');
+  }
+}
+
+function publishArticle() {
+  const title = document.getElementById('artTitle').value.trim();
+  const content = document.getElementById('artContent').value.trim();
+  if (!title || !content) { alert('Title and content are required!'); return; }
+  
+  const newArticle = {
+    id: Date.now(),
+    title,
+    category: document.getElementById('artCategory').value,
+    author: document.getElementById('artAuthor').value || 'Adv. Mohit Jain',
+    date: new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}),
+    excerpt: document.getElementById('artExcerpt').value || content.substring(0, 120) + '...',
+    content
+  };
+  
+  articles.unshift(newArticle);
+  saveArticles();
+  renderArticles();
+  
+  // Reset form
+  ['artTitle','artExcerpt','artContent'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('publishMsg').textContent = '✓ Published!';
+  setTimeout(() => document.getElementById('publishMsg').textContent = '', 3000);
+}
+
+loadArticles();
+</script>
+</body>
+</html>

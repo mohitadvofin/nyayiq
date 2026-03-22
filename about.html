@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — NyayIQ Tax Intelligence</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --muted: #666;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--ink); color: var(--paper); font-family: 'DM Sans', sans-serif; }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    border-bottom: 3px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
+  .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+  nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #888; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+  nav a:hover { color: var(--gold); }
+  nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
+
+  /* HERO */
+  .hero {
+    padding: 6rem 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  @media(max-width:768px) { .hero { grid-template-columns: 1fr; gap: 3rem; } }
+
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+  .hero p {
+    font-size: 1rem;
+    color: #aaa;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  /* PROFILE CARD */
+  .profile-card {
+    background: #111;
+    border: 1px solid #222;
+    border-top: 3px solid var(--gold);
+    padding: 2.5rem;
+    position: relative;
+  }
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1a1500, #2a2000);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+  }
+  .profile-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .profile-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.25rem;
+  }
+  .profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .profile-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid #2a2a2a;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .profile-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 0.82rem;
+  }
+  .profile-stat:last-child { border-bottom: none; }
+  .profile-stat-label { color: #666; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; }
+  .profile-stat-value { color: var(--paper); font-weight: 500; }
+
+  /* DIVIDER */
+  .section-divider {
+    border: none;
+    border-top: 1px solid #1a1a1a;
+    margin: 0;
+  }
+
+  /* STORY SECTION */
+  .story {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+  .story-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+  }
+  .story h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+  }
+  .story h2 em { color: var(--gold); font-style: italic; }
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media(max-width:768px) { .story-grid { grid-template-columns: 1fr; } }
+  .story p {
+    font-size: 0.95rem;
+    color: #aaa;
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+  }
+  .story blockquote {
+    border-left: 3px solid var(--gold);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--paper);
+    line-height: 1.6;
+  }
+
+  /* CREDENTIALS */
+  .credentials {
+    background: #080808;
+    padding: 5rem 2rem;
+  }
+  .credentials-inner { max-width: 1100px; margin: 0 auto; }
+  .cred-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .cred-card {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    padding: 1.75rem;
+    transition: border-color 0.2s;
+  }
+  .cred-card:hover { border-color: rgba(201,168,76,0.3); }
+  .cred-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .cred-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .cred-desc { font-size: 0.82rem; color: #777; line-height: 1.6; }
+
+  /* VENTURES */
+  .ventures {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+  .ventures-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  @media(max-width:768px) { .ventures-grid { grid-template-columns: 1fr; } }
+  .venture-card {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .venture-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .venture-card.litigation::before { background: var(--gold); }
+  .venture-card.compliance::before { background: #4ade80; }
+  .venture-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .venture-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.25rem;
+  }
+  .venture-desc { font-size: 0.88rem; color: #888; line-height: 1.7; margin-bottom: 1.5rem; }
+  .venture-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .venture-list li {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: #666;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .venture-list li::before { content: '→'; position: absolute; left: 0; color: var(--gold); }
+
+  /* NOTABLE CLIENTS */
+  .clients {
+    background: #080808;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  .clients-inner { max-width: 800px; margin: 0 auto; }
+  .clients-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+  }
+  .clients-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .client-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: #555;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .client-name:hover { border-color: #333; color: #888; }
+
+  /* CTA */
+  .cta {
+    max-width: 1100px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+  }
+  .cta-inner {
+    background: linear-gradient(135deg, #111, #1a1500);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 4rem;
+    text-align: center;
+  }
+  .cta h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem; }
+  .cta p { color: #888; margin-bottom: 2rem; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0.85rem 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline {
+    border: 1px solid #444;
+    color: #aaa;
+    padding: 0.85rem 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* FOOTER */
+  footer {
+    background: #050505;
+    border-top: 1px solid #1a1a1a;
+    padding: 2.5rem 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .footer-bottom span { font-size: 0.65rem; color: #333; }
+  footer a { font-size: 0.65rem; color: #444; text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.6s ease forwards; }
+  .fade-up-2 { animation: fadeUp 0.6s 0.15s ease forwards; opacity: 0; }
+  .fade-up-3 { animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:baseline;gap:0.5rem;">
+    <a href="home.html" style="text-decoration:none;display:flex;align-items:baseline;gap:0.5rem;">
+      <span class="logo-text">NyayIQ</span>
+      <span class="logo-sub">Tax Intelligence</span>
+    </a>
+  </div>
+  <nav style="display:flex;gap:1.5rem;align-items:center;">
+    <a href="home.html">Home</a>
+    <a href="index.html">Dashboard</a>
+    <a href="articles.html">Articles</a>
+    <a href="about.html" class="active">About</a>
+    <a href="drafts.html">Drafts</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.5rem 1.2rem;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Dashboard →</a>
+</header>
+
+<!-- HERO -->
+<section>
+  <div class="hero">
+    <div class="fade-up">
+      <div class="hero-label">About NyayIQ</div>
+      <h1>Built by a<br><em>Practitioner,</em><br>For Practitioners</h1>
+      <p>NyayIQ was born out of a simple frustration — spending hours every morning searching for relevant tax judgements across dozens of websites, only to find them buried in legalese with no practical insight.</p>
+      <p>As a tax advocate practicing before the Delhi High Court, ITAT, and GST Appellate Authority for over a decade, I built the tool I always wished existed.</p>
+      <p style="color:#666;font-size:0.88rem;font-family:'IBM Plex Mono',monospace;">— Adv. Mohit Jain, Founder</p>
+    </div>
+    <div class="fade-up-2">
+      <div class="profile-card">
+        <div class="profile-avatar">⚖️</div>
+        <div class="profile-name">Adv. Mohit Jain</div>
+        <div class="profile-title">Advocate & Tax Advisor · Delhi</div>
+        <div class="profile-tags">
+          <span class="profile-tag">GST Litigation</span>
+          <span class="profile-tag">Income Tax</span>
+          <span class="profile-tag">ITAT</span>
+          <span class="profile-tag">Delhi HC</span>
+          <span class="profile-tag">NCLT</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat-label">Experience</span>
+          <span class="profile-stat-value">10+ Years</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat-label">Practice</span>
+          <span class="profile-stat-value">Delhi HC, ITAT, CIT(A)</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat-label">Chamber</span>
+          <span class="profile-stat-value">Tis Hazari Courts, Delhi</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat-label">Registered Office</span>
+          <span class="profile-stat-value">Roshanara Plaza, Delhi</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat-label">Specialisation</span>
+          <span class="profile-stat-value">GST & Income Tax Appeals</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- STORY -->
+<section class="story">
+  <div class="story-label">The Story</div>
+  <h2>Why <em>NyayIQ</em> Exists</h2>
+  <div class="story-grid">
+    <div>
+      <p>Every morning, tax practitioners across India face the same problem — hundreds of new judgements, circulars, and notifications, spread across TaxGuru, Indian Kanoon, Income Tax websites, and GST portals. Finding what's relevant takes hours. Understanding it takes more.</p>
+      <p>I spent over a decade practicing tax litigation — drafting appeals, arguing before the GST Appellate Authority, Delhi High Court, and ITAT. During that time, I saw how much time practitioners waste just finding relevant case law, let alone analyzing it.</p>
+      <blockquote>"The law doesn't lack good judgements. It lacks a good way to find and understand them quickly."</blockquote>
+    </div>
+    <div>
+      <p>NyayIQ changes that. Every day, our system automatically collects the most important GST, Income Tax, Customs, and ITAT judgements from trusted sources. Each one is analyzed by Claude AI — not just summarized, but distilled into what actually matters for a practitioner: the legal issue, the ruling, and what it means for your clients.</p>
+      <p>You can also upload any PDF judgement you have — a High Court order, an ITAT decision, even a GST Appellate Authority ruling — and get instant structured analysis in seconds.</p>
+      <p>NyayIQ is built on one principle: <strong style="color:var(--paper);">your time as a practitioner is too valuable to spend on research that a machine can do better and faster.</strong></p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CREDENTIALS -->
+<section class="credentials">
+  <div class="credentials-inner">
+    <div class="story-label">Credentials</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;margin-bottom:0.5rem;">Practice & <em style="color:var(--gold);font-style:italic;">Experience</em></h2>
+    <div class="cred-grid">
+      <div class="cred-card">
+        <div class="cred-icon">🏛️</div>
+        <div class="cred-title">Delhi High Court</div>
+        <div class="cred-desc">Appearing in income tax and GST matters before the Hon'ble Delhi High Court, including writ petitions challenging assessments and departmental orders.</div>
+      </div>
+      <div class="cred-card">
+        <div class="cred-icon">⚖️</div>
+        <div class="cred-title">ITAT — Income Tax Appellate Tribunal</div>
+        <div class="cred-desc">Extensive experience in second appeals before ITAT Delhi Benches — capital gains, business income, TDS matters, and international taxation disputes.</div>
+      </div>
+      <div class="cred-card">
+        <div class="cred-icon">📋</div>
+        <div class="cred-title">GST Appellate Authority</div>
+        <div class="cred-desc">Handling GST appeals under Section 107 — refund rejections, ITC disallowances, demand orders under Section 73/74, and Rule 86A blockings.</div>
+      </div>
+      <div class="cred-card">
+        <div class="cred-icon">🏢</div>
+        <div class="cred-title">CIT (Appeals)</div>
+        <div class="cred-desc">Regular appearances before Commissioner of Income Tax (Appeals) across Delhi jurisdiction — assessment orders, penalty proceedings, and search matters.</div>
+      </div>
+      <div class="cred-card">
+        <div class="cred-icon">📖</div>
+        <div class="cred-title">Published Author</div>
+        <div class="cred-desc">Editor of "GST in 2 Hours: The CTD Way!" — a practitioner's guide to GST compliance. Regular speaker at GST seminars and training programs.</div>
+      </div>
+      <div class="cred-card">
+        <div class="cred-icon">🏗️</div>
+        <div class="cred-title">NCLT Practice</div>
+        <div class="cred-desc">Appearing before the National Company Law Tribunal in insolvency and restructuring matters, often intersecting with tax implications for corporate debtors.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VENTURES -->
+<section class="ventures">
+  <div class="story-label">Our Ventures</div>
+  <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;margin-bottom:0.5rem;">Two Practices, <em style="color:var(--gold);font-style:italic;">One Vision</em></h2>
+  <p style="color:#777;font-size:0.9rem;margin-bottom:0;max-width:500px;">Serving clients at every stage — from compliance to courtroom.</p>
+  <div class="ventures-grid">
+    <div class="venture-card litigation">
+      <div class="venture-name">MJ Lex Legal Chambers LLP</div>
+      <div class="venture-type">Tax Litigation Practice</div>
+      <div class="venture-desc">Specialist tax litigation firm handling GST and income tax disputes at appellate and judicial levels. From show cause notices to High Court writs.</div>
+      <ul class="venture-list">
+        <li>GST Appellate Authority — Section 107 Appeals</li>
+        <li>Income Tax — CIT(A) & ITAT Delhi</li>
+        <li>Delhi High Court — Writ Petitions</li>
+        <li>NCLT — Insolvency & Tax Matters</li>
+        <li>GST Demand & SCN Defense</li>
+      </ul>
+    </div>
+    <div class="venture-card compliance">
+      <div class="venture-name">AdvoFin Consulting Pvt Ltd</div>
+      <div class="venture-type">Accounting & Compliance Services</div>
+      <div class="venture-desc">End-to-end accounting, bookkeeping, and compliance solutions for startups, SMEs, and growing businesses. GST registration to annual returns.</div>
+      <ul class="venture-list">
+        <li>GST Registration & Monthly Returns</li>
+        <li>Income Tax Filing & Advisory</li>
+        <li>Bookkeeping & Financial Statements</li>
+        <li>ROC Compliance & Secretarial Work</li>
+        <li>Startup & MSME Advisory</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- NOTABLE CLIENTS -->
+<section class="clients">
+  <div class="clients-inner">
+    <div class="clients-label">Trusted By</div>
+    <div class="clients-grid">
+      <div class="client-name">Blinkit</div>
+      <div class="client-name">Malabar Gold</div>
+      <div class="client-name">Raheja Developers</div>
+      <div class="client-name">Deloitte</div>
+      <div class="client-name">Multiple CA Firms</div>
+      <div class="client-name">MSMEs across Delhi NCR</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-inner">
+    <h2>Work With Us</h2>
+    <p>Whether you need litigation support, compliance services, or just want to use NyayIQ for your practice — we're here.</p>
+    <div class="cta-btns">
+      <a href="index.html" class="btn-gold">Open Dashboard →</a>
+      <a href="contact.html" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 NyayIQ · <a href="home.html">Home</a> · <a href="articles.html">Articles</a> · <a href="contact.html">Contact</a> · <a href="#">Privacy</a></span>
+    <span>⚠️ For informational purposes only. Not legal advice.</span>
+  </div>
+</footer>
+
+</body>
+</html>

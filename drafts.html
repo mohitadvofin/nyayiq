@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LexDraft — AI Legal Document Generator | NyayIQ</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='28'%3E📜%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --muted: #666;
+    --border: #1e1e1e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--ink); color: var(--paper); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    border-bottom: 3px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-wrap { display: flex; align-items: baseline; gap: 0.75rem; text-decoration: none; }
+  .logo-main { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+  .logo-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+  .logo-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 0.2rem 0.6rem; border-radius: 2rem; text-transform: uppercase; letter-spacing: 1px; }
+  nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #666; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+  nav a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    border-bottom: 1px solid #111;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(201,168,76,0.06) 0%, transparent 70%);
+  }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .ai-badge {
+    background: rgba(74,222,128,0.1);
+    color: #4ade80;
+    border: 1px solid rgba(74,222,128,0.25);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+    font-size: 0.6rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+  .hero p { color: #888; max-width: 540px; margin: 0 auto 2rem; line-height: 1.7; font-size: 0.95rem; position: relative; }
+
+  /* DOCUMENT TYPE SELECTOR */
+  .doc-selector { max-width: 1000px; margin: 3rem auto 0; padding: 0 2rem; }
+  .doc-selector-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .doc-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+  .doc-type-btn {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .doc-type-btn:hover { border-color: rgba(201,168,76,0.4); background: #161616; }
+  .doc-type-btn.active { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+  .doc-type-icon { font-size: 1.5rem; }
+  .doc-type-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+  .doc-type-btn.active .doc-type-name { color: var(--gold); }
+  .doc-type-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: #555; }
+
+  /* MAIN LAYOUT */
+  .main-layout {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media(max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
+
+  /* FORM PANEL */
+  .form-panel {
+    background: #111;
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: sticky;
+    top: 80px;
+  }
+  .form-panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .form-panel-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.65rem 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: 2px;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+  .form-group select option { background: #1a1a1a; }
+  .form-group textarea { min-height: 80px; resize: vertical; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  .api-key-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: rgba(201,168,76,0.05);
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+  .api-key-row input { flex: 1; background: transparent; border: none; color: var(--paper); font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; outline: none; }
+  .api-key-row input::placeholder { color: #444; }
+  .api-save-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; background: rgba(201,168,76,0.2); color: var(--gold); border: none; padding: 0.4rem 0.75rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
+  .generate-btn {
+    width: 100%;
+    background: var(--gold);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 1rem;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .generate-btn:hover { background: var(--gold-light); }
+  .generate-btn:disabled { background: #2a2a2a; color: #555; cursor: not-allowed; }
+
+  /* OUTPUT PANEL */
+  .output-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+  .output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: #111;
+    border: 1px solid var(--border);
+  }
+  .output-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; }
+  .output-actions { display: flex; gap: 0.5rem; }
+  .action-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid #333;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .action-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .action-btn.primary { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+  .action-btn.primary:hover { background: var(--gold-light); }
+
+  /* DOCUMENT PREVIEW */
+  .doc-preview {
+    background: #fff;
+    color: #1a1a1a;
+    padding: 3rem;
+    min-height: 500px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    border: 1px solid #ddd;
+    position: relative;
+  }
+  .doc-preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: #ccc;
+    text-align: center;
+    gap: 1rem;
+  }
+  .doc-preview-placeholder .icon { font-size: 3rem; opacity: 0.3; }
+  .doc-preview-placeholder p { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #bbb; }
+
+  .doc-content h2 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; color: #1a1a1a; }
+  .doc-content h3 { font-size: 0.9rem; font-weight: 600; margin: 1rem 0 0.3rem; color: #333; }
+  .doc-content p { margin-bottom: 0.75rem; color: #333; }
+  .doc-content strong { color: #1a1a1a; }
+  .doc-title { text-align: center; font-size: 1.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; color: #1a1a1a; }
+  .doc-subtitle { text-align: center; font-size: 0.8rem; color: #666; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid #1a1a1a; }
+  .doc-parties { background: #f8f5f0; padding: 1rem; margin-bottom: 1.5rem; border-left: 3px solid #c9a84c; }
+  .doc-footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #ddd; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .sig-block { text-align: center; }
+  .sig-line { border-top: 1px solid #999; margin-top: 2rem; padding-top: 0.5rem; font-size: 0.8rem; color: #666; }
+
+  /* LOADING */
+  .loading-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.9);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 10;
+  }
+  .loading-overlay.show { display: flex; }
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e8d5a3;
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #888; }
+
+  /* STATUS BAR */
+  .status-bar {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    background: #111;
+    color: #555;
+    display: none;
+  }
+  .status-bar.show { display: block; }
+  .status-bar.success { color: #4ade80; border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.05); }
+  .status-bar.error { color: #f87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.05); }
+
+  /* WATERMARK */
+  .watermark {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    color: #ddd;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="home.html" class="logo-wrap">
+    <span class="logo-main">NyayIQ</span>
+    <span class="logo-sub">Tax Intelligence</span>
+    <span class="logo-tag">LexDraft Beta</span>
+  </a>
+  <nav style="display:flex;gap:1.5rem;align-items:center;">
+    <a href="home.html">Home</a>
+    <a href="index.html">Dashboard</a>
+    <a href="drafts.html" style="color:var(--gold);border-bottom:1px solid var(--gold);">Drafts</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.5rem 1.2rem;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Dashboard →</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">
+    <span>LexDraft</span>
+    <span class="ai-badge">⚡ AI Powered</span>
+  </div>
+  <h1>Generate Legal Documents<br>in <em>60 Seconds</em></h1>
+  <p>Fill in the details — our AI drafts a complete, legally structured document instantly. Rent agreements, partnership deeds, NDAs, vendor contracts and more.</p>
+</div>
+
+<!-- DOCUMENT TYPE SELECTOR -->
+<div class="doc-selector">
+  <div class="doc-selector-label">Select Document Type</div>
+  <div class="doc-types">
+    <div class="doc-type-btn active" onclick="selectDoc('rent', this)">
+      <span class="doc-type-icon">🏠</span>
+      <span class="doc-type-name">Rent Agreement</span>
+      <span class="doc-type-tag">Most Popular</span>
+    </div>
+    <div class="doc-type-btn" onclick="selectDoc('nda', this)">
+      <span class="doc-type-icon">🔒</span>
+      <span class="doc-type-name">NDA</span>
+      <span class="doc-type-tag">Non-Disclosure</span>
+    </div>
+    <div class="doc-type-btn" onclick="selectDoc('partnership', this)">
+      <span class="doc-type-icon">🤝</span>
+      <span class="doc-type-name">Partnership Deed</span>
+      <span class="doc-type-tag">Firm Registration</span>
+    </div>
+    <div class="doc-type-btn" onclick="selectDoc('vendor', this)">
+      <span class="doc-type-icon">📦</span>
+      <span class="doc-type-name">Vendor Agreement</span>
+      <span class="doc-type-tag">Supply Contract</span>
+    </div>
+    <div class="doc-type-btn" onclick="selectDoc('employment', this)">
+      <span class="doc-type-icon">💼</span>
+      <span class="doc-type-name">Employment Contract</span>
+      <span class="doc-type-tag">HR Document</span>
+    </div>
+    <div class="doc-type-btn" onclick="selectDoc('service', this)">
+      <span class="doc-type-icon">⚙️</span>
+      <span class="doc-type-name">Service Agreement</span>
+      <span class="doc-type-tag">Professional</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+    <div class="form-panel-title" id="formTitle">Rent Agreement</div>
+    <div class="form-panel-sub" id="formSub">Fill in the details below to generate a complete rent agreement</div>
+
+    <!-- API KEY -->
+    <div class="api-key-row">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:#555;">🔑</span>
+      <input type="password" id="apiKeyInput" placeholder="Claude API Key (sk-ant-...)" />
+      <button class="api-save-btn" onclick="saveApiKey()">Save</button>
+    </div>
+
+    <!-- DYNAMIC FORM -->
+    <div id="dynamicForm">
+      <!-- Rent Agreement Form (default) -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Landlord Name *</label>
+          <input type="text" id="landlordName" placeholder="Ramesh Kumar Sharma" />
+        </div>
+        <div class="form-group">
+          <label>Tenant Name *</label>
+          <input type="text" id="tenantName" placeholder="Suresh Mehta" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Property Address *</label>
+        <input type="text" id="propertyAddress" placeholder="Flat No. 203, ABC Apartments, Delhi - 110001" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Monthly Rent (₹) *</label>
+          <input type="number" id="monthlyRent" placeholder="25000" />
+        </div>
+        <div class="form-group">
+          <label>Security Deposit (₹)</label>
+          <input type="number" id="securityDeposit" placeholder="75000" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Lease Start Date *</label>
+          <input type="date" id="leaseStart" />
+        </div>
+        <div class="form-group">
+          <label>Lease Duration</label>
+          <select id="leaseDuration">
+            <option>11 months</option>
+            <option>1 year</option>
+            <option>2 years</option>
+            <option>3 years</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Landlord Address</label>
+          <input type="text" id="landlordAddress" placeholder="Landlord's permanent address" />
+        </div>
+        <div class="form-group">
+          <label>Lock-in Period</label>
+          <select id="lockin">
+            <option>None</option>
+            <option>3 months</option>
+            <option>6 months</option>
+            <option>11 months</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Special Clauses (optional)</label>
+        <textarea id="specialClauses" placeholder="e.g. Pets not allowed, maintenance charges to be borne by tenant, etc."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Landlord Aadhar / PAN</label>
+          <input type="text" id="landlordId" placeholder="PAN: ABCDE1234F" />
+        </div>
+        <div class="form-group">
+          <label>Tenant Aadhar / PAN</label>
+          <input type="text" id="tenantId" placeholder="PAN: XYZAB5678G" />
+        </div>
+      </div>
+    </div>
+
+    <button class="generate-btn" id="generateBtn" onclick="generateDocument()">
+      <span id="btnText">⚡ Generate Document</span>
+    </button>
+  </div>
+
+  <!-- OUTPUT PANEL -->
+  <div class="output-panel">
+    <div class="output-header">
+      <div class="output-title" id="outputTitle">Document Preview</div>
+      <div class="output-actions">
+        <button class="action-btn" onclick="copyText()">📋 Copy</button>
+        <button class="action-btn primary" onclick="printDoc()">🖨️ Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div class="status-bar" id="statusBar"></div>
+
+    <div class="doc-preview" id="docPreview">
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">AI is drafting your document...</div>
+      </div>
+
+      <div class="doc-preview-placeholder" id="placeholder">
+        <div class="icon">📜</div>
+        <p>Fill in the form and click<br><strong>Generate Document</strong></p>
+        <p style="margin-top:0.5rem;color:#999;font-size:0.65rem;">Your document will appear here</p>
+      </div>
+
+      <div class="doc-content" id="docContent" style="display:none;"></div>
+      <div class="watermark">Generated by NyayIQ LexDraft</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentDocType = 'rent';
+
+// Load saved API key
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('nyayiq_api_key');
+  if (saved) document.getElementById('apiKeyInput').value = saved;
+  // Set today as default lease start
+  const today = new Date().toISOString().split('T')[0];
+  const leaseStart = document.getElementById('leaseStart');
+  if (leaseStart) leaseStart.value = today;
+});
+
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (key) {
+    localStorage.setItem('nyayiq_api_key', key);
+    showStatus('✓ API key saved', 'success');
+  }
+}
+
+function selectDoc(type, el) {
+  currentDocType = type;
+  document.querySelectorAll('.doc-type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+
+  const configs = {
+    rent: {
+      title: 'Rent Agreement',
+      sub: 'Fill in the details below to generate a complete rent agreement',
+      form: `
+        <div class="form-row">
+          <div class="form-group"><label>Landlord Name *</label><input type="text" id="f1" placeholder="Ramesh Kumar Sharma" /></div>
+          <div class="form-group"><label>Tenant Name *</label><input type="text" id="f2" placeholder="Suresh Mehta" /></div>
+        </div>
+        <div class="form-group"><label>Property Address *</label><input type="text" id="f3" placeholder="Flat No. 203, ABC Apartments, Delhi - 110001" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>Monthly Rent (₹) *</label><input type="number" id="f4" placeholder="25000" /></div>
+          <div class="form-group"><label>Security Deposit (₹)</label><input type="number" id="f5" placeholder="75000" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Start Date *</label><input type="date" id="f6" /></div>
+          <div class="form-group"><label>Duration</label><select id="f7"><option>11 months</option><option>1 year</option><option>2 years</option></select></div>
+        </div>
+        <div class="form-group"><label>Special Clauses</label><textarea id="f8" placeholder="Pets not allowed, maintenance by tenant, etc."></textarea></div>
+      `
+    },
+    nda: {
+      title: 'Non-Disclosure Agreement',
+      sub: 'Generate a mutual or one-way NDA for business protection',
+      form: `
+        <div class="form-row">
+          <div class="form-group"><label>Disclosing Party *</label><input type="text" id="f1" placeholder="ABC Technologies Pvt Ltd" /></div>
+          <div class="form-group"><label>Receiving Party *</label><input type="text" id="f2" placeholder="XYZ Consulting Pvt Ltd" /></div>
+        </div>
+        <div class="form-group"><label>Purpose of Disclosure *</label><input type="text" id="f3" placeholder="Business collaboration for software development project" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>NDA Type</label><select id="f4"><option>Mutual (Both parties)</option><option>One-way (Disclosing → Receiving)</option></select></div>
+          <div class="form-group"><label>Duration</label><select id="f5"><option>1 year</option><option>2 years</option><option>3 years</option><option>Indefinite</option></select></div>
+        </div>
+        <div class="form-group"><label>Confidential Information Includes</label><textarea id="f6" placeholder="Trade secrets, business plans, client lists, financial data, technical specifications..."></textarea></div>
+        <div class="form-group"><label>Governing Law</label><input type="text" id="f7" placeholder="Delhi, India" /></div>
+      `
+    },
+    partnership: {
+      title: 'Partnership Deed',
+      sub: 'Create a partnership deed for firm registration',
+      form: `
+        <div class="form-group"><label>Firm Name *</label><input type="text" id="f1" placeholder="M/s Sharma & Associates" /></div>
+        <div class="form-group"><label>Business Nature *</label><input type="text" id="f2" placeholder="Trading in electronic goods and accessories" /></div>
+        <div class="form-group"><label>Registered Address *</label><input type="text" id="f3" placeholder="Shop No. 5, Market Complex, Delhi - 110001" /></div>
+        <div class="form-group"><label>Partner 1 Name & Details *</label><input type="text" id="f4" placeholder="Ramesh Sharma, S/o Suresh Sharma, Delhi" /></div>
+        <div class="form-group"><label>Partner 2 Name & Details *</label><input type="text" id="f5" placeholder="Vikram Singh, S/o Mohan Singh, Delhi" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>Partner 1 Share (%)</label><input type="number" id="f6" placeholder="50" /></div>
+          <div class="form-group"><label>Partner 2 Share (%)</label><input type="number" id="f7" placeholder="50" /></div>
+        </div>
+        <div class="form-group"><label>Capital Contribution</label><input type="text" id="f8" placeholder="Partner 1: ₹5,00,000 | Partner 2: ₹5,00,000" /></div>
+      `
+    },
+    vendor: {
+      title: 'Vendor Agreement',
+      sub: 'Generate a vendor/supplier agreement for business transactions',
+      form: `
+        <div class="form-row">
+          <div class="form-group"><label>Company Name *</label><input type="text" id="f1" placeholder="Buyer Company Pvt Ltd" /></div>
+          <div class="form-group"><label>Vendor Name *</label><input type="text" id="f2" placeholder="Supplier Enterprises" /></div>
+        </div>
+        <div class="form-group"><label>Goods/Services *</label><input type="text" id="f3" placeholder="Supply of office furniture and fixtures" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>Contract Value</label><input type="text" id="f4" placeholder="₹5,00,000" /></div>
+          <div class="form-group"><label>Payment Terms</label><select id="f5"><option>30 days credit</option><option>Advance payment</option><option>50% advance, 50% on delivery</option><option>COD</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Delivery Timeline</label><input type="text" id="f6" placeholder="Within 30 days of purchase order" /></div>
+          <div class="form-group"><label>Penalty for Delay</label><input type="text" id="f7" placeholder="0.5% per week of delayed amount" /></div>
+        </div>
+        <div class="form-group"><label>Special Terms</label><textarea id="f8" placeholder="Quality standards, inspection rights, warranty, etc."></textarea></div>
+      `
+    },
+    employment: {
+      title: 'Employment Contract',
+      sub: 'Generate a complete employment offer letter and contract',
+      form: `
+        <div class="form-row">
+          <div class="form-group"><label>Company Name *</label><input type="text" id="f1" placeholder="ABC Pvt Ltd" /></div>
+          <div class="form-group"><label>Employee Name *</label><input type="text" id="f2" placeholder="Priya Sharma" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Designation *</label><input type="text" id="f3" placeholder="Senior Software Engineer" /></div>
+          <div class="form-group"><label>Department</label><input type="text" id="f4" placeholder="Technology" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>CTC (Annual) *</label><input type="text" id="f5" placeholder="₹12,00,000" /></div>
+          <div class="form-group"><label>Joining Date *</label><input type="date" id="f6" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Notice Period</label><select id="f7"><option>30 days</option><option>60 days</option><option>90 days</option></select></div>
+          <div class="form-group"><label>Probation Period</label><select id="f8"><option>6 months</option><option>3 months</option><option>1 year</option></select></div>
+        </div>
+      `
+    },
+    service: {
+      title: 'Service Agreement',
+      sub: 'Create a professional services agreement',
+      form: `
+        <div class="form-row">
+          <div class="form-group"><label>Service Provider *</label><input type="text" id="f1" placeholder="AdvoFin Consulting Pvt Ltd" /></div>
+          <div class="form-group"><label>Client Name *</label><input type="text" id="f2" placeholder="XYZ Enterprises Pvt Ltd" /></div>
+        </div>
+        <div class="form-group"><label>Services Provided *</label><textarea id="f3" placeholder="GST compliance, monthly return filing, bookkeeping services..."></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>Monthly Fee (₹)</label><input type="number" id="f4" placeholder="15000" /></div>
+          <div class="form-group"><label>Contract Duration</label><select id="f5"><option>1 year</option><option>6 months</option><option>2 years</option><option>Ongoing</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Payment Due</label><select id="f6"><option>5th of each month</option><option>1st of each month</option><option>15th of each month</option></select></div>
+          <div class="form-group"><label>Notice Period</label><select id="f7"><option>30 days</option><option>60 days</option><option>15 days</option></select></div>
+        </div>
+        <div class="form-group"><label>Scope Exclusions</label><input type="text" id="f8" placeholder="Tax litigation, court appearances not included" /></div>
+      `
+    }
+  };
+
+  const cfg = configs[type];
+  document.getElementById('formTitle').textContent = cfg.title;
+  document.getElementById('formSub').textContent = cfg.sub;
+  document.getElementById('dynamicForm').innerHTML = cfg.form;
+  document.getElementById('outputTitle').textContent = cfg.title + ' Preview';
+  document.getElementById('docContent').style.display = 'none';
+  document.getElementById('placeholder').style.display = 'flex';
+
+  // Set today as default date
+  const dateInputs = document.querySelectorAll('input[type="date"]');
+  dateInputs.forEach(d => { if (!d.value) d.value = new Date().toISOString().split('T')[0]; });
+}
+
+function collectFormData() {
+  const inputs = document.querySelectorAll('#dynamicForm input, #dynamicForm select, #dynamicForm textarea');
+  const data = {};
+  inputs.forEach((el, i) => {
+    data[`field_${i + 1}`] = el.value || el.placeholder || '';
+    data[el.id] = el.value || '';
+  });
+  return data;
+}
+
+function buildPrompt(docType, formData) {
+  const docNames = {
+    rent: 'Rent Agreement',
+    nda: 'Non-Disclosure Agreement (NDA)',
+    partnership: 'Partnership Deed',
+    vendor: 'Vendor/Supplier Agreement',
+    employment: 'Employment Contract',
+    service: 'Professional Service Agreement'
+  };
+
+  const inputs = Object.entries(formData)
+    .filter(([k, v]) => !k.startsWith('field_') && v)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join('\n');
+
+  return `You are a senior Indian lawyer. Draft a complete, professional ${docNames[docType]} for India.
+
+User inputs:
+${inputs}
+
+Requirements:
+- Complete, legally structured document under Indian law
+- All standard clauses for this type of document
+- Formal legal language appropriate for Indian courts
+- Include: title, parties section, recitals, main clauses, schedules if needed, signature blocks
+- Format with clear section headings
+- Make it ready to print and sign
+
+Return the complete document text only. Use this exact format:
+[TITLE]
+[SUBTITLE/DATE LINE]
+
+BETWEEN:
+[Parties section]
+
+RECITALS:
+[Background]
+
+NOW THIS AGREEMENT WITNESSETH:
+[Main clauses numbered 1, 2, 3...]
+
+IN WITNESS WHEREOF...
+[Signature blocks]
+
+Be thorough and complete.`;
+}
+
+async function generateDocument() {
+  const apiKey = localStorage.getItem('nyayiq_api_key') || document.getElementById('apiKeyInput').value.trim();
+  if (!apiKey) {
+    showStatus('⚠ Please enter your Claude API key first', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  const btnText = document.getElementById('btnText');
+  btn.disabled = true;
+  btnText.textContent = '⏳ Generating...';
+
+  document.getElementById('loadingOverlay').classList.add('show');
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('docContent').style.display = 'none';
+  hideStatus();
+
+  try {
+    const formData = collectFormData();
+    const prompt = buildPrompt(currentDocType, formData);
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 3000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || 'API error');
+
+    const text = data.content?.[0]?.text || '';
+    renderDocument(text);
+    showStatus('✓ Document generated successfully — review before use', 'success');
+
+  } catch (e) {
+    showStatus('✗ Error: ' + e.message, 'error');
+    document.getElementById('placeholder').style.display = 'flex';
+  } finally {
+    document.getElementById('loadingOverlay').classList.remove('show');
+    btn.disabled = false;
+    btnText.textContent = '⚡ Generate Document';
+  }
+}
+
+function renderDocument(text) {
+  const container = document.getElementById('docContent');
+
+  // Format the document text as HTML
+  let html = '';
+  const lines = text.split('\n');
+  let inSection = false;
+
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (!trimmed) { html += '<br>'; return; }
+
+    // Title line (first few lines, all caps or very short)
+    if (i < 3 && (trimmed === trimmed.toUpperCase() || trimmed.includes('AGREEMENT') || trimmed.includes('DEED') || trimmed.includes('CONTRACT'))) {
+      if (i === 0) html += `<div class="doc-title">${trimmed}</div>`;
+      else html += `<div class="doc-subtitle">${trimmed}</div>`;
+    }
+    // Section headings
+    else if (trimmed.match(/^(BETWEEN|RECITALS|NOW THIS|IN WITNESS|SCHEDULE|CLAUSE|ARTICLE)/i) || trimmed.match(/^\d+\.\s+[A-Z]/)) {
+      html += `<h2>${trimmed}</h2>`;
+    }
+    // Sub-clauses
+    else if (trimmed.match(/^\d+\.\d+/)) {
+      html += `<h3>${trimmed}</h3>`;
+    }
+    // Parties section
+    else if (trimmed.includes('hereinafter') || trimmed.includes('LANDLORD') || trimmed.includes('TENANT') || trimmed.includes('PARTY')) {
+      html += `<p><strong>${trimmed}</strong></p>`;
+    }
+    // Normal paragraphs
+    else {
+      html += `<p>${trimmed}</p>`;
+    }
+  });
+
+  container.innerHTML = html;
+  container.style.display = 'block';
+}
+
+function showStatus(msg, type) {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.className = `status-bar show ${type}`;
+}
+function hideStatus() {
+  document.getElementById('statusBar').className = 'status-bar';
+}
+
+function copyText() {
+  const text = document.getElementById('docContent').innerText;
+  if (!text) { alert('Generate a document first!'); return; }
+  navigator.clipboard.writeText(text).then(() => showStatus('✓ Copied to clipboard', 'success'));
+}
+
+function printDoc() {
+  const content = document.getElementById('docContent').innerHTML;
+  if (!content) { alert('Generate a document first!'); return; }
+  const w = window.open('', '_blank');
+  w.document.write(`
+    <html><head><title>LexDraft Document</title>
+    <style>
+      body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.8; margin: 2.5cm; color: #000; }
+      h2 { font-size: 11pt; text-transform: uppercase; margin: 1.5rem 0 0.5rem; letter-spacing: 0.5px; }
+      h3 { font-size: 11pt; margin: 0.75rem 0 0.25rem; }
+      p { margin-bottom: 0.5rem; text-align: justify; }
+      .doc-title { text-align: center; font-size: 14pt; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.25cm; }
+      .doc-subtitle { text-align: center; font-size: 10pt; color: #555; margin-bottom: 1cm; padding-bottom: 0.5cm; border-bottom: 1pt solid #000; }
+      @media print { body { margin: 2cm; } }
+    </style></head>
+    <body>${content}
+    <p style="margin-top:2cm;font-size:9pt;color:#999;text-align:center;">Generated by NyayIQ LexDraft — For informational purposes only. Consult a legal professional before signing.</p>
+    </body></html>
+  `);
+  w.document.close();
+  w.print();
+}
+</script>
+</body>
+</html>

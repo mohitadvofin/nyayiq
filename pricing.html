@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — NyayIQ Tax Intelligence</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0d0d0d; --paper:#f5f0e8; --gold:#c9a84c; --gold-light:#e8d5a3; --muted:#666; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--ink); color:var(--paper); font-family:'DM Sans',sans-serif; }
+
+  header { background:var(--ink); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--gold); position:sticky; top:0; z-index:100; }
+  .logo-text { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--gold); }
+  .logo-sub { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#888; text-transform:uppercase; letter-spacing:2px; }
+  nav a { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
+  nav a:hover { color:var(--gold); }
+  nav a.active { color:var(--gold); border-bottom:1px solid var(--gold); }
+
+  /* PAGE HEADER */
+  .page-header { padding:5rem 2rem 4rem; text-align:center; position:relative; overflow:hidden; }
+  .page-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 100%, rgba(201,168,76,0.07) 0%, transparent 70%); }
+  .label { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:1rem; }
+  .page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:900; margin-bottom:1rem; position:relative; }
+  .page-header h1 em { color:var(--gold); font-style:italic; }
+  .page-header p { color:#888; max-width:500px; margin:0 auto; line-height:1.7; position:relative; }
+
+  /* BILLING TOGGLE */
+  .billing-toggle { display:flex; align-items:center; justify-content:center; gap:1rem; margin:2.5rem 0; }
+  .toggle-label { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#888; text-transform:uppercase; letter-spacing:1px; }
+  .toggle-label.active { color:var(--paper); }
+  .toggle-switch { width:48px; height:26px; background:#222; border-radius:13px; cursor:pointer; position:relative; transition:background 0.2s; border:1px solid #333; }
+  .toggle-switch.yearly { background:rgba(201,168,76,0.3); }
+  .toggle-knob { width:20px; height:20px; background:#888; border-radius:50%; position:absolute; top:2px; left:3px; transition:all 0.2s; }
+  .toggle-switch.yearly .toggle-knob { left:23px; background:var(--gold); }
+  .save-badge { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; background:rgba(74,222,128,0.15); color:#4ade80; border:1px solid rgba(74,222,128,0.3); padding:0.2rem 0.6rem; border-radius:2rem; }
+
+  /* PRICING GRID */
+  .pricing-section { max-width:1100px; margin:0 auto; padding:1rem 2rem 5rem; }
+  .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  @media(max-width:768px) { .pricing-grid { grid-template-columns:1fr; } }
+
+  .plan-card { background:#111; border:1px solid #1e1e1e; padding:2.5rem; position:relative; transition:border-color 0.2s; display:flex; flex-direction:column; }
+  .plan-card:hover { border-color:#333; }
+  .plan-card.popular { border-color:var(--gold); background:linear-gradient(180deg,#1a1500 0%,#111 40%); }
+
+  .popular-badge { position:absolute; top:-1px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.6rem; font-weight:700; padding:0.3rem 1rem; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+
+  .plan-name { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:0.75rem; }
+  .plan-price { font-family:'Playfair Display',serif; font-size:3rem; font-weight:900; line-height:1; margin-bottom:0.3rem; }
+  .plan-price span { font-family:'IBM Plex Mono',monospace; font-size:1rem; font-weight:400; color:#888; }
+  .plan-price-yearly { font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#4ade80; margin-bottom:1rem; display:none; }
+  .plan-price-yearly.show { display:block; }
+  .plan-desc { font-size:0.85rem; color:#888; line-height:1.6; margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid #1e1e1e; }
+
+  .plan-features { flex:1; margin-bottom:2rem; }
+  .feature-row { display:flex; align-items:flex-start; gap:0.75rem; padding:0.5rem 0; font-size:0.85rem; color:#ccc; border-bottom:1px solid #161616; }
+  .feature-row:last-child { border-bottom:none; }
+  .feature-row.disabled { color:#444; }
+  .feature-check { font-size:0.8rem; margin-top:0.1rem; min-width:16px; }
+
+  .plan-btn { display:block; text-align:center; padding:0.9rem; font-family:'IBM Plex Mono',monospace; font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; text-decoration:none; cursor:pointer; border:none; transition:all 0.2s; }
+  .plan-btn.free { background:transparent; border:1px solid #333; color:#888; }
+  .plan-btn.free:hover { border-color:#555; color:#aaa; }
+  .plan-btn.pro { background:var(--gold); color:var(--ink); }
+  .plan-btn.pro:hover { background:var(--gold-light); transform:translateY(-2px); }
+  .plan-btn.firm { background:#222; color:var(--paper); border:1px solid #333; }
+  .plan-btn.firm:hover { background:#2a2a2a; }
+
+  /* COMPARISON TABLE */
+  .comparison { max-width:900px; margin:0 auto; padding:2rem 2rem 5rem; }
+  .comparison h2 { font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:2rem; text-align:center; }
+  .comparison h2 em { color:var(--gold); font-style:italic; }
+  .comp-table { width:100%; border-collapse:collapse; }
+  .comp-table th { font-family:'IBM Plex Mono',monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:1px; padding:1rem; border-bottom:2px solid #222; }
+  .comp-table th:first-child { text-align:left; color:#888; }
+  .comp-table th.pro-col { color:var(--gold); }
+  .comp-table td { padding:0.85rem 1rem; border-bottom:1px solid #111; font-size:0.85rem; text-align:center; }
+  .comp-table td:first-child { text-align:left; color:#aaa; font-size:0.82rem; }
+  .comp-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .comp-yes { color:#4ade80; }
+  .comp-no { color:#333; }
+  .comp-val { color:var(--paper); font-family:'IBM Plex Mono',monospace; font-size:0.75rem; }
+
+  /* FAQ */
+  .faq { max-width:700px; margin:0 auto; padding:2rem 2rem 5rem; }
+  .faq h2 { font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:2rem; text-align:center; }
+  .faq-item { border-bottom:1px solid #1a1a1a; }
+  .faq-q { padding:1.25rem 0; font-size:0.95rem; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .faq-q:hover { color:var(--gold); }
+  .faq-a { font-size:0.85rem; color:#888; line-height:1.7; padding-bottom:1.25rem; display:none; }
+  .faq-a.open { display:block; }
+  .faq-arrow { font-size:0.7rem; color:#555; transition:transform 0.2s; }
+  .faq-arrow.open { transform:rotate(180deg); }
+
+  /* RAZORPAY MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999; align-items:center; justify-content:center; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:#111; border:1px solid #333; border-top:3px solid var(--gold); padding:2.5rem; width:480px; max-width:90vw; position:relative; }
+  .modal h3 { font-family:'Playfair Display',serif; font-size:1.5rem; margin-bottom:0.5rem; }
+  .modal p { color:#888; font-size:0.85rem; margin-bottom:1.5rem; line-height:1.6; }
+  .modal-close { position:absolute; top:1rem; right:1rem; background:none; border:none; color:#666; font-size:1.3rem; cursor:pointer; }
+  .modal-close:hover { color:var(--gold); }
+  .modal-price { font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--gold); margin-bottom:1.5rem; }
+  .modal-price span { font-family:'IBM Plex Mono',monospace; font-size:0.9rem; color:#888; }
+  .modal-input { width:100%; background:#1a1a1a; border:1px solid #333; color:var(--paper); font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:0.75rem; outline:none; margin-bottom:0.75rem; transition:border-color 0.2s; }
+  .modal-input:focus { border-color:var(--gold); }
+  .razorpay-btn { width:100%; background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:700; padding:1rem; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; }
+  .razorpay-btn:hover { background:var(--gold-light); }
+  .modal-note { font-family:'IBM Plex Mono',monospace; font-size:0.62rem; color:#444; margin-top:0.75rem; text-align:center; line-height:1.6; }
+
+  /* CTA */
+  .bottom-cta { background:linear-gradient(135deg,#111,#1a1500); border:1px solid rgba(201,168,76,0.2); padding:4rem 2rem; text-align:center; margin:0 2rem 4rem; }
+  .bottom-cta h2 { font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:1rem; }
+  .bottom-cta p { color:#888; margin-bottom:2rem; }
+  .btn-gold { background:var(--gold); color:var(--ink); padding:0.9rem 2.5rem; font-family:'IBM Plex Mono',monospace; font-size:0.78rem; font-weight:600; text-decoration:none; text-transform:uppercase; letter-spacing:1px; display:inline-block; transition:all 0.2s; border:none; cursor:pointer; }
+  .btn-gold:hover { background:var(--gold-light); transform:translateY(-2px); }
+
+  footer { background:#050505; border-top:1px solid #1a1a1a; padding:2rem; font-family:'IBM Plex Mono',monospace; }
+  .footer-bottom { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem; }
+  .footer-bottom span { font-size:0.65rem; color:#333; }
+  footer a { color:#444; text-decoration:none; font-size:0.65rem; }
+  footer a:hover { color:var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="home.html" style="text-decoration:none;display:flex;align-items:baseline;gap:0.5rem;">
+    <span class="logo-text">NyayIQ</span>
+    <span class="logo-sub">Tax Intelligence</span>
+  </a>
+  <nav style="display:flex;gap:1.5rem;align-items:center;">
+    <a href="home.html">Home</a>
+    <a href="index.html">Dashboard</a>
+    <a href="articles.html">Articles</a>
+    <a href="about.html">About</a>
+    <a href="drafts.html">Drafts</a>
+    <a href="pricing.html" class="active">Pricing</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;padding:0.5rem 1.2rem;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Dashboard →</a>
+</header>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="label">Simple, Transparent Pricing</div>
+  <h1>Choose Your <em>Plan</em></h1>
+  <p>Start free. Upgrade when you need more. Cancel anytime. No hidden charges.</p>
+
+  <!-- BILLING TOGGLE -->
+  <div class="billing-toggle">
+    <span class="toggle-label active" id="monthlyLabel">Monthly</span>
+    <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+      <div class="toggle-knob"></div>
+    </div>
+    <span class="toggle-label" id="yearlyLabel">Yearly</span>
+    <span class="save-badge">Save 25%</span>
+  </div>
+</div>
+
+<!-- PRICING CARDS -->
+<div class="pricing-section">
+  <div class="pricing-grid">
+
+    <!-- FREE -->
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">₹0 <span>/ month</span></div>
+      <div class="plan-price-yearly" id="free-yearly">Always free</div>
+      <div class="plan-desc">Perfect for getting started. Browse daily judgements and try AI analysis.</div>
+      <div class="plan-features">
+        <div class="feature-row"><span class="feature-check">✅</span> Daily judgement feed</div>
+        <div class="feature-row"><span class="feature-check">✅</span> GST / IT / Customs filters</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Search judgements</div>
+        <div class="feature-row"><span class="feature-check">✅</span> <strong>5 AI Summaries / month</strong></div>
+        <div class="feature-row disabled"><span class="feature-check">❌</span> PDF Upload & Analysis</div>
+        <div class="feature-row disabled"><span class="feature-check">❌</span> Unlimited AI Summaries</div>
+        <div class="feature-row disabled"><span class="feature-check">❌</span> Export to PDF</div>
+        <div class="feature-row disabled"><span class="feature-check">❌</span> Priority support</div>
+      </div>
+      <a href="index.html" class="plan-btn free">Use Free →</a>
+    </div>
+
+    <!-- PRO -->
+    <div class="plan-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price" id="pro-price">₹999 <span>/ month</span></div>
+      <div class="plan-price-yearly" id="pro-yearly">₹8,999 / year — save ₹3,000</div>
+      <div class="plan-desc">For individual advocates and CAs who need unlimited AI-powered research daily.</div>
+      <div class="plan-features">
+        <div class="feature-row"><span class="feature-check">✅</span> Everything in Free</div>
+        <div class="feature-row"><span class="feature-check">✅</span> <strong>Unlimited AI Summaries</strong></div>
+        <div class="feature-row"><span class="feature-check">✅</span> PDF Upload & Analysis</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Export summary to PDF</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Email digest — daily top 5</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Bookmark judgements</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Priority email support</div>
+        <div class="feature-row disabled"><span class="feature-check">❌</span> Team access (up to 5 users)</div>
+      </div>
+      <button class="plan-btn pro" onclick="openPaymentModal('pro')">Get Pro →</button>
+    </div>
+
+    <!-- FIRM -->
+    <div class="plan-card">
+      <div class="plan-name">Firm</div>
+      <div class="plan-price" id="firm-price">₹3,999 <span>/ month</span></div>
+      <div class="plan-price-yearly" id="firm-yearly">₹34,999 / year — save ₹13,000</div>
+      <div class="plan-desc">For CA firms and law firms. Full team access with shared workspace.</div>
+      <div class="plan-features">
+        <div class="feature-row"><span class="feature-check">✅</span> Everything in Pro</div>
+        <div class="feature-row"><span class="feature-check">✅</span> <strong>Up to 5 team members</strong></div>
+        <div class="feature-row"><span class="feature-check">✅</span> Shared bookmarks</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Team digest email</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Usage analytics</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Dedicated onboarding call</div>
+        <div class="feature-row"><span class="feature-check">✅</span> WhatsApp support</div>
+        <div class="feature-row"><span class="feature-check">✅</span> Custom branding on exports</div>
+      </div>
+      <button class="plan-btn firm" onclick="openPaymentModal('firm')">Get Firm Plan →</button>
+    </div>
+
+  </div>
+
+  <!-- ENTERPRISE NOTE -->
+  <div style="text-align:center;margin-top:2rem;padding:1.5rem;border:1px solid #1a1a1a;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">Enterprise</div>
+    <div style="font-size:0.9rem;color:#888;margin-bottom:1rem;">Large firms, corporates, banks — custom pricing, API access, white-label. <strong style="color:var(--paper);">Starting ₹15,000/month.</strong></div>
+    <a href="contact.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--gold);text-decoration:none;text-transform:uppercase;letter-spacing:1px;">Contact us for Enterprise →</a>
+  </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="comparison">
+  <h2>Full Feature <em>Comparison</em></h2>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Free</th>
+        <th class="pro-col">Pro</th>
+        <th>Firm</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Daily judgement feed</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td></tr>
+      <tr><td>GST / IT / Customs filters</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td></tr>
+      <tr><td>Search judgements</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td></tr>
+      <tr><td>AI Summaries</td><td class="comp-val">5 / month</td><td class="comp-val">Unlimited</td><td class="comp-val">Unlimited</td></tr>
+      <tr><td>PDF Upload & Analysis</td><td class="comp-no">—</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td></tr>
+      <tr><td>Export to PDF</td><td class="comp-no">—</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td></tr>
+      <tr><td>Daily email digest</td><td class="comp-no">—</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td></tr>
+      <tr><td>Bookmark judgements</td><td class="comp-no">—</td><td class="comp-yes">✓</td><td class="comp-yes">✓</td></tr>
+      <tr><td>Team members</td><td class="comp-no">—</td><td class="comp-no">—</td><td class="comp-val">Up to 5</td></tr>
+      <tr><td>WhatsApp support</td><td class="comp-no">—</td><td class="comp-no">—</td><td class="comp-yes">✓</td></tr>
+      <tr><td>Custom branding</td><td class="comp-no">—</td><td class="comp-no">—</td><td class="comp-yes">✓</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- FAQ -->
+<div class="faq">
+  <h2>Frequently Asked <em>Questions</em></h2>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What counts as an "AI Summary"? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Each time you click "AI Summary →" on a judgement card and get a structured legal analysis generated, that counts as one AI Summary. Viewing a pre-generated summary does not count.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I cancel anytime? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Yes — no long-term commitment. You can cancel your subscription at any time. Your access continues until the end of the billing period.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Is my payment secure? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">All payments are processed securely through Razorpay — India's most trusted payment gateway. We never store your card details.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Do you offer GST invoice? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Yes! We provide GST-compliant invoices for all Pro and Firm subscriptions. You can claim this as a professional expense.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What is your refund policy? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">If you are not satisfied within the first 7 days of your subscription, contact us at contact@nyayiq.in and we will issue a full refund — no questions asked.</div>
+  </div>
+</div>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <h2>Start Free Today</h2>
+  <p>No credit card required. Upgrade when you're ready.</p>
+  <a href="index.html" class="btn-gold">Open Dashboard Free →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 NyayIQ · <a href="home.html">Home</a> · <a href="index.html">Dashboard</a> · <a href="contact.html">Contact</a> · <a href="#">Privacy</a></span>
+    <span>⚠️ For informational purposes only. Not legal advice.</span>
+  </div>
+</footer>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="paymentModal" onclick="closePaymentModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('paymentModal').classList.remove('show')">✕</button>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;" id="modalPlanName">Pro Plan</div>
+    <h3>Subscribe to NyayIQ</h3>
+    <p>Fill in your details and proceed to secure payment via Razorpay.</p>
+    <div class="modal-price" id="modalPrice">₹999 <span>/ month</span></div>
+    <input type="text" class="modal-input" id="payName" placeholder="Your full name *" />
+    <input type="email" class="modal-input" id="payEmail" placeholder="Email address *" />
+    <input type="tel" class="modal-input" id="payPhone" placeholder="Phone number (for WhatsApp support)" />
+    <button class="razorpay-btn" onclick="initiatePayment()">🔒 Pay Securely via Razorpay →</button>
+    <div class="modal-note">Secured by Razorpay · GST invoice provided · 7-day refund guarantee</div>
+  </div>
+</div>
+
+<script>
+let billingYearly = false;
+let selectedPlan = 'pro';
+
+const prices = {
+  pro: { monthly: 999, yearly: 8999 },
+  firm: { monthly: 3999, yearly: 34999 }
+};
+
+function toggleBilling() {
+  billingYearly = !billingYearly;
+  const toggle = document.getElementById('billingToggle');
+  toggle.classList.toggle('yearly', billingYearly);
+  document.getElementById('monthlyLabel').classList.toggle('active', !billingYearly);
+  document.getElementById('yearlyLabel').classList.toggle('active', billingYearly);
+
+  // Update prices
+  document.getElementById('pro-price').innerHTML = billingYearly
+    ? `₹${prices.pro.yearly.toLocaleString()} <span>/ year</span>`
+    : `₹${prices.pro.monthly} <span>/ month</span>`;
+  document.getElementById('firm-price').innerHTML = billingYearly
+    ? `₹${prices.firm.yearly.toLocaleString()} <span>/ year</span>`
+    : `₹${prices.firm.monthly} <span>/ month</span>`;
+
+  // Show/hide yearly savings
+  document.getElementById('pro-yearly').classList.toggle('show', billingYearly);
+  document.getElementById('firm-yearly').classList.toggle('show', billingYearly);
+  document.getElementById('free-yearly').classList.toggle('show', billingYearly);
+}
+
+function openPaymentModal(plan) {
+  selectedPlan = plan;
+  const amount = billingYearly ? prices[plan].yearly : prices[plan].monthly;
+  const period = billingYearly ? 'year' : 'month';
+  document.getElementById('modalPlanName').textContent = plan === 'pro' ? 'Pro Plan' : 'Firm Plan';
+  document.getElementById('modalPrice').innerHTML = `₹${amount.toLocaleString()} <span>/ ${period}</span>`;
+  document.getElementById('paymentModal').classList.add('show');
+}
+
+function closePaymentModal(e) {
+  if (e.target === document.getElementById('paymentModal')) {
+    document.getElementById('paymentModal').classList.remove('show');
+  }
+}
+
+function initiatePayment() {
+  const name = document.getElementById('payName').value.trim();
+  const email = document.getElementById('payEmail').value.trim();
+  if (!name || !email) { alert('Please fill in your name and email.'); return; }
+
+  const amount = billingYearly ? prices[selectedPlan].yearly : prices[selectedPlan].monthly;
+
+  // Razorpay integration
+  // Replace 'YOUR_RAZORPAY_KEY' with your actual Razorpay Key ID from dashboard.razorpay.com
+  const options = {
+    key: 'YOUR_RAZORPAY_KEY',
+    amount: amount * 100, // in paise
+    currency: 'INR',
+    name: 'NyayIQ',
+    description: `NyayIQ ${selectedPlan === 'pro' ? 'Pro' : 'Firm'} Plan - ${billingYearly ? 'Annual' : 'Monthly'}`,
+    image: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⚖️</text></svg>',
+    prefill: { name, email, contact: document.getElementById('payPhone').value },
+    theme: { color: '#c9a84c' },
+    handler: function(response) {
+      // Payment successful
+      document.getElementById('paymentModal').classList.remove('show');
+      alert(`✅ Payment successful! Your ${selectedPlan === 'pro' ? 'Pro' : 'Firm'} subscription is now active.\n\nPayment ID: ${response.razorpay_payment_id}\n\nYou will receive a confirmation email at ${email} shortly.`);
+      // In production: send payment_id to your backend to verify and activate subscription
+    },
+    modal: {
+      ondismiss: function() { console.log('Payment cancelled'); }
+    }
+  };
+
+  // Load Razorpay script if not loaded
+  if (typeof Razorpay === 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => { const rzp = new Razorpay(options); rzp.open(); };
+    document.body.appendChild(script);
+  } else {
+    const rzp = new Razorpay(options);
+    rzp.open();
+  }
+}
+
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const arrow = el.querySelector('.faq-arrow');
+  answer.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+</script>
+</body>
+</html>
